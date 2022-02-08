@@ -38,7 +38,7 @@ function create ()
     const belowLayer = map.createStaticLayer('grama', tileset, 0, 0) ('chão', tileset, 0, 0)
     const worldLayer = map.createStaticLayer('árvores e pedras', tileset, 0, 0);
     
-    worldLayer.setCollisionByProperty({ collider: true })
+    worldLayer.setCollisionByProperty({ collides: true })
     //player1 = this.physics.add.sprite(384, 768, 'player1')
     //player2 = this.physics.add.sprite(736, 48, 'player2')
 
@@ -52,20 +52,20 @@ function create ()
        // frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
       // frameRate: 10,
       // repeat: -1
-    });
+   // });
 
     // this.anims.create({
        // key: 'turn',
        // frames: [ { key: 'dude', frame: 4 } ],
        // frameRate: 20
-    });
+   // });
 
     // this.anims.create({
        // key: 'right',
        // frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
        // frameRate: 10,
        // repeat: -1
-    });
+   // });
 
     //  Input Events
     // cursors = this.input.keyboard.createCursorKeys();
