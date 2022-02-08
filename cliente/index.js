@@ -25,8 +25,8 @@ var game = new Phaser.Game(config);
 
 function preload ()
 {
-    this.load.image('imagens', 'cliente/assets/MasterSimple.png');    
-    this.load.tilemapTiledJSON('mapa', 'cliente/assets/mapa1.json');
+    this.load.image('imagens', '../cliente/assets/MasterSimple.png');    
+    this.load.tilemapTiledJSON('mapa', '../cliente/assets/mapa1.json');
 }
 
 function create ()
@@ -35,7 +35,8 @@ function create ()
 
     const tileset = map.addTilesetImage('assets', 'imagens');
 
-    const belowLayer = map.createStaticLayer('grama', tileset, 0, 0) ('chão', tileset, 0, 0)
+    const belowLayer1 = map.createStaticLayer('grama', tileset, 0, 0);
+    const belowLayer2 = map.createStaticLayer('chão', tileset, 0, 0);
     const worldLayer = map.createStaticLayer('árvores e pedras', tileset, 0, 0);
     
     worldLayer.setCollisionByProperty({ collides: true })
