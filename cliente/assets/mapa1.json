@@ -8,7 +8,7 @@
          "encoding":"base64",
          "height":50,
          "id":1,
-         "name":"grama",
+         "name":"belowlayer1",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
@@ -22,7 +22,7 @@
          "encoding":"base64",
          "height":50,
          "id":3,
-         "name":"ch\u00e3o",
+         "name":"belowlayer2",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
@@ -36,7 +36,7 @@
          "encoding":"base64",
          "height":50,
          "id":2,
-         "name":"\u00e1rvores e pedras",
+         "name":"worldlayer",
          "opacity":1,
          "properties":[
                 {
