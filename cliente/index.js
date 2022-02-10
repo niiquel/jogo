@@ -1,11 +1,11 @@
 var config = {
     type: Phaser.AUTO,
     width: 800,
-    height: 600,
+    height: 800,
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 1000 },
+            gravity: { y: 200 },
             debug: false
         }
     },
@@ -25,8 +25,8 @@ var game = new Phaser.Game(config);
 
 function preload ()
 {
-    this.load.image('imagens', './cliente/assets/MasterSimple.png');    
-    this.load.tilemapTiledJSON('mapa', './cliente/assets/mapa1.json');
+    this.load.image('imagens', '../cliente/assets/MasterSimple.png');    
+    this.load.tilemapTiledJSON('mapa', '../cliente/assets/labirinto.json');
 }
 
 function create ()
