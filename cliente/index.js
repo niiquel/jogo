@@ -1,6 +1,6 @@
 const config = {
     type: Phaser.AUTO,
-    width: 1000,
+    width: 800,
     height: 800,
     physics: {
         default: 'arcade',
@@ -41,41 +41,73 @@ function create ()
 
     const tileset = map.addTilesetImage('assets', 'imagens');
 
-    const belowLayer1 = map.createStaticLayer('belowlayer1', tileset, 0, 0);
-    const belowLayer2 = map.createStaticLayer('belowlayer2', tileset, 0, 0);
-    const worldLayer = map.createStaticLayer('worldlayer', tileset, 0, 0);
+    const belowLayer1 = map.createLayer('belowlayer1', tileset, 0, 0);
+    const belowLayer2 = map.createLayer('belowlayer2', tileset, 0, 0);
+    const worldLayer = map.createLayer('worldlayer', tileset, 0, 0);
     
     worldLayer.setCollisionByProperty({ collides: true })
-    player1 = this.physics.add.sprite(400, 300, 'player1', 0)
+
+    player1 = this.physics.add.sprite(384, 768, 'player1', 0)
     //player2 = this.physics.add.sprite(736, 48, 'player2')
 
-    //  Player physics properties. Give the little guy a slight bounce.
-    //player.setBounce(0.2);
-    //player.setCollideWorldBounds(true);
+    
+    player1.setCollideWorldBounds(true);
 
-    //  Our player animations, turning, walking left and walking right.
-    // this.anims.create({
-       // key: 'left',
-       // frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
-      // frameRate: 10,
-      // repeat: -1
-   // });
+    this.anims.create({
+        key: "left1",
+        frames: this.anims.generateFrameNumbers("player1", {
+          start: 3,
+          end: 5,
+        }),
+        frameRate: 10,
+        repeat: -1,
+      });
 
-    // this.anims.create({
-       // key: 'turn',
-       // frames: [ { key: 'dude', frame: 4 } ],
-       // frameRate: 20
-   // });
+    this.anims.create({
+        key: "right1",
+        frames: this.anims.generateFrameNumbers("player1", {
+          start: 6,
+          end: 8,
+        }),
+        frameRate: 10,
+        repeat: -1,
+      });
 
-    // this.anims.create({
-       // key: 'right',
-       // frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
-       // frameRate: 10,
-       // repeat: -1
-   // });
+    this.anims.create({
+        key: "stopped1",
+        frames: this.anims.generateFrameNumbers("player1", {
+          start: 0,
+          end: 1,
+        }),
+        frameRate: 2,
+        repeat: -1,
+      });
 
-    //  Input Events
-    // cursors = this.input.keyboard.createCursorKeys();
+    this.anims.create({
+        key: "up1",
+        frames: this.anims.generateFrameNumbers("player1", {
+          start: 9,
+          end: 11,
+        }),
+        frameRate: 10,
+        repeat: -1,
+      });
+
+      this.anims.create({
+        key: "down1",
+        frames: this.anims.generateFrameNumbers("player1", {
+          start: 0,
+          end: 2,
+        }),
+        frameRate: 10,
+        repeat: -1,
+      });
+
+    this.physics.add.collider(player1, worldLayer, null, null, this);
+
+    cursors = this.input.keyboard.createCursorKeys();
+
+    
 
     //  The score
     //scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });   
@@ -83,34 +115,23 @@ function create ()
 
 function update ()
 {
-    /*if (gameOver)
-    {
-        return;
-    }
-
-    if (cursors.left.isDown)
-    {
-        player.setVelocityX(-160);
-
-        player.anims.play('left', true);
-    }
-    else if (cursors.right.isDown)
-    {
-        player.setVelocityX(160);
-
-        player.anims.play('right', true);
-    }
-    else
-    {
-        player.setVelocityX(0);
-
-        player.anims.play('turn');
-    }
-
-    if (cursors.up.isDown && player.body.touching.down)
-    {
-        player.setVelocityY(-330);
-    } */
+    if (cursors.left.isDown) {
+        player1.body.setVelocityX(-100);
+        player1.anims.play("left1", true);
+      } else if (cursors.right.isDown) {
+        player1.body.setVelocityX(100);
+        player1.anims.play("right1", true);
+      } else {
+        player1.body.setVelocity(0);
+        player1.anims.play("stopped1", true);
+      }
+      if (cursors.up.isDown) {
+        player1.body.setVelocityY(-100);
+      } else if (cursors.down.isDown) {
+        player1.body.setVelocityY(100);
+      } else {
+        player1.body.setVelocityY(0);
+      }
 }
 
 function collectStar (player, star)
