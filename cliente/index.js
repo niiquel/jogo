@@ -1,6 +1,6 @@
-var config = {
+const config = {
     type: Phaser.AUTO,
-    width: 800,
+    width: 1000,
     height: 800,
     physics: {
         default: 'arcade',
@@ -21,7 +21,7 @@ var config = {
 // var gameOver = false;
 // var scoreText;
 
-var game = new Phaser.Game(config);
+const game = new Phaser.Game(config);
 
 function preload ()
 {
