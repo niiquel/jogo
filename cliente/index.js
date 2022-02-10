@@ -5,8 +5,8 @@ const config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 200 },
-            debug: false
+            gravity: { y: 0 },
+            debug: true
         }
     },
     scene: {
@@ -18,15 +18,21 @@ const config = {
 
 // var player1;
 // var player2;
-// var gameOver = false;
+ var cursors
+ var gameOver = false;
 // var scoreText;
 
 const game = new Phaser.Game(config);
 
 function preload ()
 {
-    this.load.image('imagens', '../cliente/assets/MasterSimple.png');    
-    this.load.tilemapTiledJSON('mapa', '../cliente/assets/labirinto.json');
+    this.load.image('imagens', './assets/MasterSimple.png');    
+    this.load.tilemapTiledJSON('mapa', './assets/labirinto.json');
+
+    this.load.spritesheet("player1", "./assets/sprite1.png", {
+        frameWidth: 15,
+        frameHeight: 16,
+      });
 }
 
 function create ()
@@ -40,7 +46,7 @@ function create ()
     const worldLayer = map.createStaticLayer('worldlayer', tileset, 0, 0);
     
     worldLayer.setCollisionByProperty({ collides: true })
-    //player1 = this.physics.add.sprite(384, 768, 'player1')
+    player1 = this.physics.add.sprite(400, 300, 'player1', 0)
     //player2 = this.physics.add.sprite(736, 48, 'player2')
 
     //  Player physics properties. Give the little guy a slight bounce.
@@ -77,7 +83,7 @@ function create ()
 
 function update ()
 {
-    if (gameOver)
+    /*if (gameOver)
     {
         return;
     }
@@ -104,7 +110,7 @@ function update ()
     if (cursors.up.isDown && player.body.touching.down)
     {
         player.setVelocityY(-330);
-    }
+    } */
 }
 
 function collectStar (player, star)
