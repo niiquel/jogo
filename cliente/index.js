@@ -64,7 +64,7 @@ function create ()
           start: 3,
           end: 5,
         }),
-        frameRate: 10,
+        frameRate: 9,
         repeat: -1,
       });
 
@@ -74,7 +74,7 @@ function create ()
           start: 6,
           end: 8,
         }),
-        frameRate: 10,
+        frameRate: 9,
         repeat: -1,
       });
 
@@ -84,7 +84,7 @@ function create ()
           start: 0,
           end: 1,
         }),
-        frameRate: 2,
+        frameRate: 3,
         repeat: -1,
       });
 
@@ -94,7 +94,7 @@ function create ()
           start: 9,
           end: 11,
         }),
-        frameRate: 10,
+        frameRate: 9,
         repeat: -1,
       });
 
@@ -104,7 +104,7 @@ function create ()
           start: 0,
           end: 2,
         }),
-        frameRate: 10,
+        frameRate: 9,
         repeat: -1,
       });
 
@@ -116,7 +116,7 @@ function create ()
         start: 3,
         end: 5,
       }),
-      frameRate: 10,
+      frameRate: 9,
       repeat: -1,
     });
 
@@ -126,17 +126,17 @@ function create ()
         start: 6,
         end: 8,
       }),
-      frameRate: 10,
+      frameRate: 9,
       repeat: -1,
     });
 
   this.anims.create({
       key: "stopped2",
       frames: this.anims.generateFrameNumbers("player2", {
-        start: 0,
-        end: 1,
+        start: 1,
+        end: 2,
       }),
-      frameRate: 2,
+      frameRate: 3,
       repeat: -1,
     });
 
@@ -146,7 +146,7 @@ function create ()
         start: 9,
         end: 11,
       }),
-      frameRate: 10,
+      frameRate: 9,
       repeat: -1,
     });
 
@@ -156,7 +156,7 @@ function create ()
         start: 0,
         end: 2,
       }),
-      frameRate: 10,
+      frameRate: 9,
       repeat: -1,
     });
 
