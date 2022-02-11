@@ -62,8 +62,7 @@ cena1.create = function ()
     this.anims.create({
         key: "stopped1",
         frames: this.anims.generateFrameNumbers("player1", {
-          start: 0,
-          end: 1,
+          frames: [2,1],
         }),
         frameRate: 3,
         repeat: -1,
@@ -72,8 +71,7 @@ cena1.create = function ()
     this.anims.create({
         key: "up1",
         frames: this.anims.generateFrameNumbers("player1", {
-          start: 9,
-          end: 11,
+          frames: [9,11]
         }),
         frameRate: 9,
         repeat: -1,
@@ -82,8 +80,7 @@ cena1.create = function ()
       this.anims.create({
         key: "down1",
         frames: this.anims.generateFrameNumbers("player1", {
-          start: 0,
-          end: 2,
+          frames: [0,2]
         }),
         frameRate: 9,
         repeat: -1,
@@ -114,8 +111,7 @@ cena1.create = function ()
   this.anims.create({
       key: "stopped2",
       frames: this.anims.generateFrameNumbers("player2", {
-        start: 1,
-        end: 2,
+        frames: [2,1]
       }),
       frameRate: 3,
       repeat: -1,
