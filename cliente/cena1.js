@@ -7,9 +7,11 @@
 
 cena1.preload = function ()
 {
+    // tilesets e mapa
     this.load.image('imagens', './assets/MasterSimple.png');    
     this.load.tilemapTiledJSON('mapa', './assets/labirinto.json');
 
+    // personagens 
     this.load.spritesheet("player1", "./assets/sprite1.png", {
         frameWidth: 15,
         frameHeight: 16,
@@ -23,22 +25,28 @@ cena1.preload = function ()
 
 cena1.create = function ()
 {
+    // mapa
     const map = this.make.tilemap({ key: 'mapa' });
 
     const tileset = map.addTilesetImage('assets', 'imagens');
 
+    // camadas
     const belowLayer1 = map.createLayer('belowlayer1', tileset, 0, 0);
     const belowLayer2 = map.createLayer('belowlayer2', tileset, 0, 0);
     const worldLayer = map.createLayer('worldlayer', tileset, 0, 0);
     
+    // colisão com camadas
     worldLayer.setCollisionByProperty({ collides: true });
 
+    // spawn
     player1 = this.physics.add.sprite(400, 768, 'player1', 0);
     player2 = this.physics.add.sprite(752, 48, 'player2', 0);
 
+    //colisão com bordas
     player1.setCollideWorldBounds(true);
     player2.setCollideWorldBounds(true);
 
+    //frames das animações
     this.anims.create({
         key: "left1",
         frames: this.anims.generateFrameNumbers("player1", {
@@ -87,8 +95,6 @@ cena1.create = function ()
         frameRate: 7,
         repeat: -1,
       });
-
-    this.physics.add.collider(player1, worldLayer, null, null, this);
 
     this.anims.create({
       key: "left2",
@@ -139,8 +145,12 @@ cena1.create = function ()
       repeat: -1,
     });
 
+    // Colisão com cenário
+    this.physics.add.collider(player1, worldLayer, null, null, this);
+
     this.physics.add.collider(player2, worldLayer, null, null, this);
 
+    // Direcionais
     cursors = this.input.keyboard.createCursorKeys();
 
     
@@ -151,6 +161,8 @@ cena1.create = function ()
 
 cena1.update = function ()
 {
+  
+  //Sincronizar direcionais com movimentos
   if (cursors.left.isDown) {
     player1.body.setVelocityX(-50);
   } else if (cursors.right.isDown) {
@@ -183,6 +195,7 @@ cena1.update = function ()
     player2.body.setVelocityY(0);
   }
 
+  // Sincronizar direcionais e animações
   if (cursors.left.isDown) {
     player1.anims.play("left1", true);
   } else if (cursors.right.isDown) {
