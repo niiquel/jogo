@@ -45,7 +45,7 @@ cena1.create = function ()
           start: 3,
           end: 5,
         }),
-        frameRate: 9,
+        frameRate: 7,
         repeat: -1,
       });
 
@@ -55,7 +55,7 @@ cena1.create = function ()
           start: 6,
           end: 8,
         }),
-        frameRate: 9,
+        frameRate: 7,
         repeat: -1,
       });
 
@@ -71,18 +71,20 @@ cena1.create = function ()
     this.anims.create({
         key: "up1",
         frames: this.anims.generateFrameNumbers("player1", {
-          frames: [9,11]
+          start: 9,
+          end: 11,
         }),
-        frameRate: 9,
+        frameRate: 7,
         repeat: -1,
       });
 
       this.anims.create({
         key: "down1",
         frames: this.anims.generateFrameNumbers("player1", {
-          frames: [0,2]
+          start: 0,
+          end: 2,
         }),
-        frameRate: 9,
+        frameRate: 7,
         repeat: -1,
       });
 
@@ -94,7 +96,7 @@ cena1.create = function ()
         start: 3,
         end: 5,
       }),
-      frameRate: 9,
+      frameRate: 7,
       repeat: -1,
     });
 
@@ -104,7 +106,7 @@ cena1.create = function ()
         start: 6,
         end: 8,
       }),
-      frameRate: 9,
+      frameRate: 7,
       repeat: -1,
     });
 
@@ -123,7 +125,7 @@ cena1.create = function ()
         start: 9,
         end: 11,
       }),
-      frameRate: 9,
+      frameRate: 7,
       repeat: -1,
     });
 
@@ -133,7 +135,7 @@ cena1.create = function ()
         start: 0,
         end: 2,
       }),
-      frameRate: 9,
+      frameRate: 7,
       repeat: -1,
     });
 
@@ -149,45 +151,61 @@ cena1.create = function ()
 
 cena1.update = function ()
 {
-    if (cursors.left.isDown) {
-        player1.body.setVelocityX(-50);
-        player1.anims.play("left1", true);
-      } else if (cursors.right.isDown) {
-        player1.body.setVelocityX(50);
-        player1.anims.play("right1", true);
-      } else {
-        player1.body.setVelocity(0);
-        player1.anims.play("stopped1", true);
-      }
-    if (cursors.up.isDown) {
-        player1.body.setVelocityY(-50);
-        player1.anims.play("up1", true);
-      } else if (cursors.down.isDown) {
-        player1.body.setVelocityY(50);
-        player1.anims.play("down1", true);
-      } else {
-        player1.body.setVelocityY(0);
-      }
+  if (cursors.left.isDown) {
+    player1.body.setVelocityX(-50);
+  } else if (cursors.right.isDown) {
+    player1.body.setVelocityX(50);
+  } else {
+    player1.body.setVelocityX(0);
+  }
 
-      if (cursors.left.isDown) {
-        player2.body.setVelocityX(-50);
-        player2.anims.play("left2", true);
-      } else if (cursors.right.isDown) {
-        player2.body.setVelocityX(50);
-        player2.anims.play("right2", true);
-      } else {
-        player2.body.setVelocity(0);
-        player2.anims.play("stopped2", true);
-      }
-    if (cursors.up.isDown) {
-        player2.body.setVelocityY(-50);
-        player2.anims.play("up2", true);
-      } else if (cursors.down.isDown) {
-        player2.body.setVelocityY(50);
-        player2.anims.play("down2", true);
-      } else {
-        player2.body.setVelocityY(0);
-      }
+  if (cursors.up.isDown) {
+    player1.body.setVelocityY(-50);
+  } else if (cursors.down.isDown) {
+    player1.body.setVelocityY(50);
+  } else {
+    player1.body.setVelocityY(0);
+  }
+
+  if (cursors.left.isDown) {
+    player2.body.setVelocityX(-50);
+  } else if (cursors.right.isDown) {
+    player2.body.setVelocityX(50);
+  } else {
+    player2.body.setVelocityX(0);
+  }
+
+  if (cursors.up.isDown) {
+    player2.body.setVelocityY(-50);
+  } else if (cursors.down.isDown) {
+    player2.body.setVelocityY(50);
+  } else {
+    player2.body.setVelocityY(0);
+  }
+
+  if (cursors.left.isDown) {
+    player1.anims.play("left1", true);
+  } else if (cursors.right.isDown) {
+    player1.anims.play("right1", true);
+  } else if (cursors.up.isDown) {
+    player1.anims.play("up1", true);
+  } else if (cursors.down.isDown) {
+    player1.anims.play("down1", true);
+  } else {
+    player1.anims.play("stopped1", true);
+  }
+
+  if (cursors.left.isDown) {
+    player2.anims.play("left2", true);
+  } else if (cursors.right.isDown) {
+    player2.anims.play("right2", true);
+  } else if (cursors.up.isDown) {
+    player2.anims.play("up2", true);
+  } else if (cursors.down.isDown) {
+    player2.anims.play("down2", true);
+  } else {
+    player2.anims.play("stopped2", true);
+  }
 }
 
 export { cena1 };
