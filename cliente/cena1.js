@@ -1,9 +1,14 @@
+ import { cena2 } from './cena2.js';
+ 
  var cena1 = new Phaser.Scene("Cena 1");
+ 
  var player1;
  var player2;
  var cursors;
  var gameOver = false;
-// var scoreText;
+ //var timeEvent;
+ //var timer = 60;
+ //var timerText;
 
 cena1.preload = function ()
 {
@@ -153,11 +158,17 @@ cena1.create = function ()
     // Direcionais
     cursors = this.input.keyboard.createCursorKeys();
 
-    
+    // Contagem regressiva em segundos
+    //timedEvent = this.time.addEvent({
+      //delay: 1000,
+      //callback: countdown,
+      //callbackScope: this,
+      //loop: true,
+    //});
 
-    //  The score
-    //scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });   
-}
+    // Contador na tela
+    //timerText = this.add.text(16, 16, '60', { fontSize: '32px', fill: '#000' });   
+};
 
 cena1.update = function ()
 {
@@ -220,5 +231,18 @@ cena1.update = function ()
     player2.anims.play("stopped2", true);
   }
 }
+
+  function countdown() {
+
+    //Contador decrementa em 1 segundo
+    timer -= 1;
+    timerText.setText(timer);
+
+    //Se o contador terminar segue para a cena 2
+      if (timer === 0) {
+        this.scene.start(cena2);
+        timer = 60;
+      }
+  }
 
 export { cena1 };
