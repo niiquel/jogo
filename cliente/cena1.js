@@ -9,6 +9,14 @@
  var timedEvent;
  var timer = 60;
  var timerText;
+ var jogador;
+ var ice_servers = {
+  iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+};
+ var localConnection;
+ var remoteConnection;
+ var midias;
+const audio = document.querySelector("audio");
 
 cena1.preload = function ()
 {
@@ -46,10 +54,6 @@ cena1.create = function ()
     // spawn
     player1 = this.physics.add.sprite(400, 768, 'player1', 0);
     player2 = this.physics.add.sprite(752, 48, 'player2', 0);
-
-    //colisão com bordas
-    player1.setCollideWorldBounds(true);
-    player2.setCollideWorldBounds(true);
 
     //frames das animações
     this.anims.create({
@@ -150,30 +154,148 @@ cena1.create = function ()
       repeat: -1,
     });
 
-    // Colisão com cenário
-    this.physics.add.collider(player1, worldLayer, null, null, this);
-
-    this.physics.add.collider(player2, worldLayer, null, null, this);
-
     // Direcionais
     cursors = this.input.keyboard.createCursorKeys();
 
-    // Contagem regressiva em segundos
-    timedEvent = this.time.addEvent({
-      delay: 1000,
-      callback: countdown,
-      callbackScope: this,
-      loop: true,
-    });
-
     // Contador na tela
-    timerText = this.add.text(16, 16, '60', { fontSize: '32px', fill: '#fff' });   
+    timerText = this.add.text(16, 16, '60', { fontSize: '32px', fill: '#fff' });  
+    
+    // Conectar no servidor via WebSocket
+  this.socket = io();
+
+  // Disparar evento quando jogador entrar na partida
+  var self = this;
+  var physics = this.physics;
+  var cameras = this.cameras;
+  var time = this.time;
+  var socket = this.socket;
+
+  this.socket.on("jogadores", function (jogadores) {
+    if (jogadores.primeiro === self.socket.id) {
+      // Define jogador como o primeiro
+      jogador = 1;
+
+      // Personagens colidem com os limites da cena
+      player1.setCollideWorldBounds(true);
+
+      // Colisão com camadas 1
+    physics.add.collider(player1, worldLayer, null, null, this);
+
+      // Câmera seguindo o personagem 1
+      //cameras.main.startFollow(player1);
+
+      navigator.mediaDevices
+        .getUserMedia({ video: false, audio: true })
+        .then((stream) => {
+          midias = stream;
+        })
+        .catch((error) => console.log(error));
+    } else if (jogadores.segundo === self.socket.id) {
+      
+      // Define jogador como o segundo
+      jogador = 2;
+
+      // Personagens colidem com os limites da cena
+      player2.setCollideWorldBounds(true);
+
+      // Colisão com camadas 2
+      physics.add.collider(player2, worldLayer, null, null, this);
+
+      // Câmera seguindo o personagem 2
+      //cameras.main.startFollow(player2);
+
+      navigator.mediaDevices
+        .getUserMedia({ video: false, audio: true })
+        .then((stream) => {
+          midias = stream;
+          localConnection = new RTCPeerConnection(ice_servers);
+          midias
+            .getTracks()
+            .forEach((track) => localConnection.addTrack(track, midias));
+          localConnection.onicecandidate = ({ candidate }) => {
+            candidate &&
+              socket.emit("candidate", jogadores.primeiro, candidate);
+          };
+          console.log(midias);
+          localConnection.ontrack = ({ streams: [midias] }) => {
+            audio.srcObject = midias;
+          };
+          localConnection
+            .createOffer()
+            .then((offer) => localConnection.setLocalDescription(offer))
+            .then(() => {
+              socket.emit(
+                "offer",
+                jogadores.primeiro,
+                localConnection.localDescription
+              );
+            });
+        })
+        .catch((error) => console.log(error));
+    }
+
+    // Os dois jogadores estão conectados
+    console.log(jogadores);
+    if (jogadores.primeiro !== undefined && jogadores.segundo !== undefined) {
+      
+      // Contagem regressiva em segundos (1.000 milissegundos)
+      timer = 60;
+      timedEvent = time.addEvent({
+        delay: 1000,
+        callback: countdown,
+        callbackScope: this,
+        loop: true,
+      });
+    }
+  });
+
+  this.socket.on("offer", (socketId, description) => {
+    remoteConnection = new RTCPeerConnection(ice_servers);
+    midias
+      .getTracks()
+      .forEach((track) => remoteConnection.addTrack(track, midias));
+    remoteConnection.onicecandidate = ({ candidate }) => {
+      candidate && socket.emit("candidate", socketId, candidate);
+    };
+    remoteConnection.ontrack = ({ streams: [midias] }) => {
+      audio.srcObject = midias;
+    };
+    remoteConnection
+      .setRemoteDescription(description)
+      .then(() => remoteConnection.createAnswer())
+      .then((answer) => remoteConnection.setLocalDescription(answer))
+      .then(() => {
+        socket.emit("answer", socketId, remoteConnection.localDescription);
+      });
+  });
+
+  socket.on("answer", (description) => {
+    localConnection.setRemoteDescription(description);
+  });
+
+  socket.on("candidate", (candidate) => {
+    const conn = localConnection || remoteConnection;
+    conn.addIceCandidate(new RTCIceCandidate(candidate));
+  });
+
+  // Desenhar o outro jogador
+  this.socket.on("desenharOutroJogador", ({ frame, x, y }) => {
+    if (jogador === 1) {
+      player2.setFrame(frame);
+      player2.x = x;
+      player2.y = y;
+    } else if (jogador === 2) {
+      player1.setFrame(frame);
+      player1.x = x;
+      player1.y = y;
+    }
+  });
 };
 
-cena1.update = function ()
-{
+cena1.update = function (time, delta) {
   
   //Sincronizar direcionais com movimentos
+if (jogador === 1 && timer >= 0) {
   if (cursors.left.isDown) {
     player1.body.setVelocityX(-50);
   } else if (cursors.right.isDown) {
@@ -191,6 +313,25 @@ cena1.update = function ()
   }
 
   if (cursors.left.isDown) {
+    player1.anims.play("left1", true);
+  } else if (cursors.right.isDown) {
+    player1.anims.play("right1", true);
+  } else if (cursors.up.isDown) {
+    player1.anims.play("up1", true);
+  } else if (cursors.down.isDown) {
+    player1.anims.play("down1", true);
+  } else {
+    player1.anims.play("stopped1", true);
+  }
+
+    this.socket.emit("estadoDoJogador", {
+      frame: player1.anims.currentFrame.index,
+      x: player1.body.x,
+      y: player1.body.y,
+    });
+
+  } else if (jogador === 2 && timer >= 0) {
+  if (cursors.left.isDown) {
     player2.body.setVelocityX(-50);
   } else if (cursors.right.isDown) {
     player2.body.setVelocityX(50);
@@ -205,20 +346,7 @@ cena1.update = function ()
   } else {
     player2.body.setVelocityY(0);
   }
-
-  // Sincronizar direcionais e animações
-  if (cursors.left.isDown) {
-    player1.anims.play("left1", true);
-  } else if (cursors.right.isDown) {
-    player1.anims.play("right1", true);
-  } else if (cursors.up.isDown) {
-    player1.anims.play("up1", true);
-  } else if (cursors.down.isDown) {
-    player1.anims.play("down1", true);
-  } else {
-    player1.anims.play("stopped1", true);
-  }
-
+  
   if (cursors.left.isDown) {
     player2.anims.play("left2", true);
   } else if (cursors.right.isDown) {
@@ -229,6 +357,13 @@ cena1.update = function ()
     player2.anims.play("down2", true);
   } else {
     player2.anims.play("stopped2", true);
+  }
+
+  this.socket.emit("estadoDoJogador", {
+    frame: player2.anims.currentFrame.index,
+    x: player2.body.x,
+    y: player2.body.y,
+  });
   }
 }
 
