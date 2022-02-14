@@ -6,9 +6,9 @@
  var player2;
  var cursors;
  var gameOver = false;
- //var timeEvent;
- //var timer = 60;
- //var timerText;
+ var timedEvent;
+ var timer = 60;
+ var timerText;
 
 cena1.preload = function ()
 {
@@ -159,15 +159,15 @@ cena1.create = function ()
     cursors = this.input.keyboard.createCursorKeys();
 
     // Contagem regressiva em segundos
-    //timedEvent = this.time.addEvent({
-      //delay: 1000,
-      //callback: countdown,
-      //callbackScope: this,
-      //loop: true,
-    //});
+    timedEvent = this.time.addEvent({
+      delay: 1000,
+      callback: countdown,
+      callbackScope: this,
+      loop: true,
+    });
 
     // Contador na tela
-    //timerText = this.add.text(16, 16, '60', { fontSize: '32px', fill: '#000' });   
+    timerText = this.add.text(16, 16, '60', { fontSize: '32px', fill: '#fff' });   
 };
 
 cena1.update = function ()
