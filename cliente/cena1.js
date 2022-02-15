@@ -168,7 +168,7 @@ cena1.create = function () {
   var time = this.time;
   var socket = this.socket;
 
-  socket.on("jogadores", function (jogadores) {
+  this.socket.on("jogadores", function (jogadores) {
     if (jogadores.primeiro === self.socket.id) {
       // Define jogador como o primeiro
       jogador = 1;
@@ -245,7 +245,7 @@ cena1.create = function () {
     }
   });
 
-  socket.on("offer", (socketId, description) => {
+  this.socket.on("offer", (socketId, description) => {
     remoteConnection = new RTCPeerConnection(ice_servers);
     midias
       .getTracks()
