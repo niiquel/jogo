@@ -182,7 +182,7 @@ cena1.create = function ()
     physics.add.collider(player1, worldLayer, null, null, this);
 
       // Câmera seguindo o personagem 1
-      //cameras.main.startFollow(player1);
+      cameras.main.startFollow(player1);
 
       navigator.mediaDevices
         .getUserMedia({ video: false, audio: true })
@@ -293,91 +293,83 @@ cena1.create = function ()
 };
 
 cena1.update = function (time, delta) {
-  
+
   //Sincronizar direcionais com movimentos
-if (jogador === 1 && timer >= 0) {
-  if (cursors.left.isDown) {
-    player1.body.setVelocityX(-50);
-  } else if (cursors.right.isDown) {
-    player1.body.setVelocityX(50);
-  } else {
-    player1.body.setVelocityX(0);
-  }
+  if (jogador === 1 && timer >= 0) {
+    if (cursors.left.isDown) {
+      player1.body.setVelocityX(-50);
+    } else if (cursors.right.isDown) {
+      player1.body.setVelocityX(50);
+    } else {
+      player1.body.setVelocityX(0);
+    }
 
-  if (cursors.up.isDown) {
-    player1.body.setVelocityY(-50);
-  } else if (cursors.down.isDown) {
-    player1.body.setVelocityY(50);
-  } else {
-    player1.body.setVelocityY(0);
-  }
+    if (cursors.up.isDown) {
+      player1.body.setVelocityY(-50);
+    } else if (cursors.down.isDown) {
+      player1.body.setVelocityY(50);
+    } else {
+      player1.body.setVelocityY(0);
+    }
 
-  if (cursors.left.isDown) {
-    player1.anims.play("left1", true);
-  } else if (cursors.right.isDown) {
-    player1.anims.play("right1", true);
-  } else if (cursors.up.isDown) {
-    player1.anims.play("up1", true);
-  } else if (cursors.down.isDown) {
-    player1.anims.play("down1", true);
-  } else {
-    player1.anims.play("stopped1", true);
-  }
-
+    if (cursors.left.isDown) {
+      player1.anims.play("left1", true);
+    } else if (cursors.right.isDown) {
+      player1.anims.play("right1", true);
+    } else if (cursors.up.isDown) {
+      player1.anims.play("up1", true);
+    } else if (cursors.down.isDown) {
+      player1.anims.play("down1", true);
+    } else {
+      player1.anims.play("stopped1", true);
+    }
     this.socket.emit("estadoDoJogador", {
-      frame: player1.anims.currentFrame.index,
+      frame: player1.anims.getFrameName(),
       x: player1.body.x,
       y: player1.body.y,
     });
 
   } else if (jogador === 2 && timer >= 0) {
-  if (cursors.left.isDown) {
-    player2.body.setVelocityX(-50);
-  } else if (cursors.right.isDown) {
-    player2.body.setVelocityX(50);
-  } else {
-    player2.body.setVelocityX(0);
+    if (cursors.left.isDown) {
+      player2.body.setVelocityX(-50);
+    } else if (cursors.right.isDown) {
+      player2.body.setVelocityX(50);
+    } else {
+      player2.body.setVelocityX(0);
+    }
+
+    if (cursors.up.isDown) {
+      player2.body.setVelocityY(-50);
+    } else if (cursors.down.isDown) {
+      player2.body.setVelocityY(50);
+    } else {
+      player2.body.setVelocityY(0);
+    }
+
+    if (cursors.left.isDown) {
+      player2.anims.play("left2", true);
+    } else if (cursors.right.isDown) {
+      player2.anims.play("right2", true);
+    } else if (cursors.up.isDown) {
+      player2.anims.play("up2", true);
+    } else if (cursors.down.isDown) {
+      player2.anims.play("down2", true);
+    } else {
+      player2.anims.play("stopped2", true);
+    }
+
+    this.socket.emit("estadoDoJogador", {
+      frame: player2.anims.getFrameName(),
+      x: player2.body.x,
+      y: player2.body.y,
+    });
   }
 
-  if (cursors.up.isDown) {
-    player2.body.setVelocityY(-50);
-  } else if (cursors.down.isDown) {
-    player2.body.setVelocityY(50);
-  } else {
-    player2.body.setVelocityY(0);
+  // Se o contador terminar segue para a cena 2
+  if (timer === 0) {
+    this.scene.start(cena2);
+    timer = 60;
   }
-  
-  if (cursors.left.isDown) {
-    player2.anims.play("left2", true);
-  } else if (cursors.right.isDown) {
-    player2.anims.play("right2", true);
-  } else if (cursors.up.isDown) {
-    player2.anims.play("up2", true);
-  } else if (cursors.down.isDown) {
-    player2.anims.play("down2", true);
-  } else {
-    player2.anims.play("stopped2", true);
-  }
-
-  this.socket.emit("estadoDoJogador", {
-    frame: player2.anims.currentFrame.index,
-    x: player2.body.x,
-    y: player2.body.y,
-  });
-  }
-}
-
-  function countdown() {
-
-    //Contador decrementa em 1 segundo
-    timer -= 1;
-    timerText.setText(timer);
-
-    //Se o contador terminar segue para a cena 2
-      if (timer === 0) {
-        this.scene.start(cena2);
-        timer = 60;
-      }
-  }
+};
 
 export { cena1 };
