@@ -1,166 +1,164 @@
- import { cena2 } from './cena2.js';
- 
- var cena1 = new Phaser.Scene("Cena 1");
- 
- var player1;
- var player2;
- var cursors;
- var gameOver = false;
- var timedEvent;
- var timer = 60;
- var timerText;
- var jogador;
- var ice_servers = {
+import { cena2 } from "./cena2.js";
+
+var cena1 = new Phaser.Scene("Cena 1");
+
+var player1;
+var player2;
+var cursors;
+var gameOver = false;
+var timedEvent;
+var timer = 60;
+var timerText;
+var jogador;
+var ice_servers = {
   iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
 };
- var localConnection;
- var remoteConnection;
- var midias;
+var localConnection;
+var remoteConnection;
+var midias;
 const audio = document.querySelector("audio");
 
-cena1.preload = function ()
-{
-    // tilesets e mapa
-    this.load.image('imagens', './assets/MasterSimple.png');    
-    this.load.tilemapTiledJSON('mapa', './assets/labirinto.json');
+cena1.preload = function () {
+  // tilesets e mapa
+  this.load.image("imagens", "./assets/MasterSimple.png");
+  this.load.tilemapTiledJSON("mapa", "./assets/labirinto.json");
 
-    // personagens 
-    this.load.spritesheet("player1", "./assets/sprite1.png", {
-        frameWidth: 15,
-        frameHeight: 16,
-      });
+  // personagens
+  this.load.spritesheet("player1", "./assets/sprite1.png", {
+    frameWidth: 15,
+    frameHeight: 16,
+  });
 
-    this.load.spritesheet("player2", "./assets/sprite2.png", {
-        frameWidth: 15,
-        frameHeight: 16,
-      });
-}
+  this.load.spritesheet("player2", "./assets/sprite2.png", {
+    frameWidth: 15,
+    frameHeight: 16,
+  });
+};
 
-cena1.create = function ()
-{
-    // mapa
-    const map = this.make.tilemap({ key: 'mapa' });
+cena1.create = function () {
+  // mapa
+  const map = this.make.tilemap({ key: "mapa" });
 
-    const tileset = map.addTilesetImage('assets', 'imagens');
+  const tileset = map.addTilesetImage("assets", "imagens");
 
-    // camadas
-    const belowLayer1 = map.createLayer('belowlayer1', tileset, 0, 0);
-    const belowLayer2 = map.createLayer('belowlayer2', tileset, 0, 0);
-    const worldLayer = map.createLayer('worldlayer', tileset, 0, 0);
-    
-    // colisão com camadas
-    worldLayer.setCollisionByProperty({ collides: true });
+  // camadas
+  const belowLayer1 = map.createLayer("belowlayer1", tileset, 0, 0);
+  const belowLayer2 = map.createLayer("belowlayer2", tileset, 0, 0);
+  const worldLayer = map.createLayer("worldlayer", tileset, 0, 0);
 
-    // spawn
-    player1 = this.physics.add.sprite(400, 768, 'player1', 0);
-    player2 = this.physics.add.sprite(752, 48, 'player2', 0);
+  // colisão com camadas
+  worldLayer.setCollisionByProperty({ collides: true });
 
-    //frames das animações
-    this.anims.create({
-        key: "left1",
-        frames: this.anims.generateFrameNumbers("player1", {
-          start: 3,
-          end: 5,
-        }),
-        frameRate: 7,
-        repeat: -1,
-      });
+  // spawn
+  player1 = this.physics.add.sprite(400, 768, "player1", 0);
+  player2 = this.physics.add.sprite(752, 48, "player2", 0);
 
-    this.anims.create({
-        key: "right1",
-        frames: this.anims.generateFrameNumbers("player1", {
-          start: 6,
-          end: 8,
-        }),
-        frameRate: 7,
-        repeat: -1,
-      });
-
-    this.anims.create({
-        key: "stopped1",
-        frames: this.anims.generateFrameNumbers("player1", {
-          frames: [2,1],
-        }),
-        frameRate: 3,
-        repeat: -1,
-      });
-
-    this.anims.create({
-        key: "up1",
-        frames: this.anims.generateFrameNumbers("player1", {
-          start: 9,
-          end: 11,
-        }),
-        frameRate: 7,
-        repeat: -1,
-      });
-
-      this.anims.create({
-        key: "down1",
-        frames: this.anims.generateFrameNumbers("player1", {
-          start: 0,
-          end: 2,
-        }),
-        frameRate: 7,
-        repeat: -1,
-      });
-
-    this.anims.create({
-      key: "left2",
-      frames: this.anims.generateFrameNumbers("player2", {
-        start: 3,
-        end: 5,
-      }),
-      frameRate: 7,
-      repeat: -1,
-    });
+  //frames das animações
+  this.anims.create({
+    key: "left1",
+    frames: this.anims.generateFrameNumbers("player1", {
+      start: 3,
+      end: 5,
+    }),
+    frameRate: 7,
+    repeat: -1,
+  });
 
   this.anims.create({
-      key: "right2",
-      frames: this.anims.generateFrameNumbers("player2", {
-        start: 6,
-        end: 8,
-      }),
-      frameRate: 7,
-      repeat: -1,
-    });
+    key: "right1",
+    frames: this.anims.generateFrameNumbers("player1", {
+      start: 6,
+      end: 8,
+    }),
+    frameRate: 7,
+    repeat: -1,
+  });
 
   this.anims.create({
-      key: "stopped2",
-      frames: this.anims.generateFrameNumbers("player2", {
-        frames: [2,1]
-      }),
-      frameRate: 3,
-      repeat: -1,
-    });
+    key: "stopped1",
+    frames: this.anims.generateFrameNumbers("player1", {
+      frames: [2, 1],
+    }),
+    frameRate: 3,
+    repeat: -1,
+  });
 
   this.anims.create({
-      key: "up2",
-      frames: this.anims.generateFrameNumbers("player2", {
-        start: 9,
-        end: 11,
-      }),
-      frameRate: 7,
-      repeat: -1,
-    });
+    key: "up1",
+    frames: this.anims.generateFrameNumbers("player1", {
+      start: 9,
+      end: 11,
+    }),
+    frameRate: 7,
+    repeat: -1,
+  });
 
-    this.anims.create({
-      key: "down2",
-      frames: this.anims.generateFrameNumbers("player2", {
-        start: 0,
-        end: 2,
-      }),
-      frameRate: 7,
-      repeat: -1,
-    });
+  this.anims.create({
+    key: "down1",
+    frames: this.anims.generateFrameNumbers("player1", {
+      start: 0,
+      end: 2,
+    }),
+    frameRate: 7,
+    repeat: -1,
+  });
 
-    // Direcionais
-    cursors = this.input.keyboard.createCursorKeys();
+  this.anims.create({
+    key: "left2",
+    frames: this.anims.generateFrameNumbers("player2", {
+      start: 3,
+      end: 5,
+    }),
+    frameRate: 7,
+    repeat: -1,
+  });
 
-    // Contador na tela
-    timerText = this.add.text(16, 16, '60', { fontSize: '32px', fill: '#fff' });  
-    
-    // Conectar no servidor via WebSocket
+  this.anims.create({
+    key: "right2",
+    frames: this.anims.generateFrameNumbers("player2", {
+      start: 6,
+      end: 8,
+    }),
+    frameRate: 7,
+    repeat: -1,
+  });
+
+  this.anims.create({
+    key: "stopped2",
+    frames: this.anims.generateFrameNumbers("player2", {
+      frames: [2, 1],
+    }),
+    frameRate: 3,
+    repeat: -1,
+  });
+
+  this.anims.create({
+    key: "up2",
+    frames: this.anims.generateFrameNumbers("player2", {
+      start: 9,
+      end: 11,
+    }),
+    frameRate: 7,
+    repeat: -1,
+  });
+
+  this.anims.create({
+    key: "down2",
+    frames: this.anims.generateFrameNumbers("player2", {
+      start: 0,
+      end: 2,
+    }),
+    frameRate: 7,
+    repeat: -1,
+  });
+
+  // Direcionais
+  cursors = this.input.keyboard.createCursorKeys();
+
+  // Contador na tela
+  timerText = this.add.text(16, 16, "60", { fontSize: "32px", fill: "#fff" });
+
+  // Conectar no servidor via WebSocket
   this.socket = io();
 
   // Disparar evento quando jogador entrar na partida
@@ -170,7 +168,7 @@ cena1.create = function ()
   var time = this.time;
   var socket = this.socket;
 
-  this.socket.on("jogadores", function (jogadores) {
+  socket.on("jogadores", function (jogadores) {
     if (jogadores.primeiro === self.socket.id) {
       // Define jogador como o primeiro
       jogador = 1;
@@ -179,19 +177,18 @@ cena1.create = function ()
       player1.setCollideWorldBounds(true);
 
       // Colisão com camadas 1
-    physics.add.collider(player1, worldLayer, null, null, this);
+      physics.add.collider(player1, worldLayer, null, null, this);
 
       // Câmera seguindo o personagem 1
-      cameras.main.startFollow(player1);
+      //cameras.main.startFollow(player1);
 
-      navigator.mediaDevices
-        .getUserMedia({ video: false, audio: true })
-        .then((stream) => {
-          midias = stream;
-        })
-        .catch((error) => console.log(error));
+      // navigator.mediaDevices
+      //   .getUserMedia({ video: false, audio: true })
+      //   .then((stream) => {
+      //     midias = stream;
+      //   })
+      //   .catch((error) => console.log(error));
     } else if (jogadores.segundo === self.socket.id) {
-      
       // Define jogador como o segundo
       jogador = 2;
 
@@ -204,40 +201,39 @@ cena1.create = function ()
       // Câmera seguindo o personagem 2
       //cameras.main.startFollow(player2);
 
-      navigator.mediaDevices
-        .getUserMedia({ video: false, audio: true })
-        .then((stream) => {
-          midias = stream;
-          localConnection = new RTCPeerConnection(ice_servers);
-          midias
-            .getTracks()
-            .forEach((track) => localConnection.addTrack(track, midias));
-          localConnection.onicecandidate = ({ candidate }) => {
-            candidate &&
-              socket.emit("candidate", jogadores.primeiro, candidate);
-          };
-          console.log(midias);
-          localConnection.ontrack = ({ streams: [midias] }) => {
-            audio.srcObject = midias;
-          };
-          localConnection
-            .createOffer()
-            .then((offer) => localConnection.setLocalDescription(offer))
-            .then(() => {
-              socket.emit(
-                "offer",
-                jogadores.primeiro,
-                localConnection.localDescription
-              );
-            });
-        })
-        .catch((error) => console.log(error));
+      // navigator.mediaDevices
+      //   .getUserMedia({ video: false, audio: true })
+      //   .then((stream) => {
+      //     midias = stream;
+      //     localConnection = new RTCPeerConnection(ice_servers);
+      //     midias
+      //       .getTracks()
+      //       .forEach((track) => localConnection.addTrack(track, midias));
+      //     localConnection.onicecandidate = ({ candidate }) => {
+      //       candidate &&
+      //         socket.emit("candidate", jogadores.primeiro, candidate);
+      //     };
+      //     console.log(midias);
+      //     localConnection.ontrack = ({ streams: [midias] }) => {
+      //       audio.srcObject = midias;
+      //     };
+      //     localConnection
+      //       .createOffer()
+      //       .then((offer) => localConnection.setLocalDescription(offer))
+      //       .then(() => {
+      //         socket.emit(
+      //           "offer",
+      //           jogadores.primeiro,
+      //           localConnection.localDescription
+      //         );
+      //       });
+      //   })
+      //   .catch((error) => console.log(error));
     }
 
     // Os dois jogadores estão conectados
     console.log(jogadores);
     if (jogadores.primeiro !== undefined && jogadores.segundo !== undefined) {
-      
       // Contagem regressiva em segundos (1.000 milissegundos)
       timer = 60;
       timedEvent = time.addEvent({
@@ -249,7 +245,7 @@ cena1.create = function ()
     }
   });
 
-  this.socket.on("offer", (socketId, description) => {
+  socket.on("offer", (socketId, description) => {
     remoteConnection = new RTCPeerConnection(ice_servers);
     midias
       .getTracks()
@@ -279,7 +275,7 @@ cena1.create = function ()
   });
 
   // Desenhar o outro jogador
-  this.socket.on("desenharOutroJogador", ({ frame, x, y }) => {
+  socket.on("desenharOutroJogador", ({ frame, x, y }) => {
     if (jogador === 1) {
       player2.setFrame(frame);
       player2.x = x;
@@ -371,5 +367,11 @@ cena1.update = function (time, delta) {
     timer = 60;
   }
 };
+
+function countdown() {
+  //Contador decrementa em 1 segundo
+  timer -= 1;
+  timerText.setText(timer);
+}
 
 export { cena1 };
