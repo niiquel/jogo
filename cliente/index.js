@@ -14,6 +14,13 @@ const config = {
             debug: false
         }
     },
+    scale: {
+        mode: Phaser.Scale.FIT,
+        parent: "game-container",
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        width: 800,
+        height: 800,
+    },
     scene: [cena0, cena1, cena2],
 };
 

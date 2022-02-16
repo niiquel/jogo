@@ -7,7 +7,7 @@ var player2;
 var cursors;
 var gameOver = false;
 var timedEvent;
-var timer = 60;
+var timer;
 var timerText;
 var jogador;
 var ice_servers = {
@@ -21,6 +21,7 @@ const audio = document.querySelector("audio");
 cena1.preload = function () {
   // tilesets e mapa
   this.load.image("imagens", "./assets/MasterSimple.png");
+  //this.load.image("imagens2", "./assets/grass.png");
   this.load.tilemapTiledJSON("mapa", "./assets/labirinto.json");
 
   // personagens
@@ -36,10 +37,14 @@ cena1.preload = function () {
 };
 
 cena1.create = function () {
+
+  timer = -1
+
   // mapa
   const map = this.make.tilemap({ key: "mapa" });
 
   const tileset = map.addTilesetImage("assets", "imagens");
+  //const tileset2 = map.addTilesetImage("grass", "imagens2");
 
   // camadas
   const belowLayer1 = map.createLayer("belowlayer1", tileset, 0, 0);
@@ -52,6 +57,7 @@ cena1.create = function () {
   // spawn
   player1 = this.physics.add.sprite(400, 768, "player1", 0);
   player2 = this.physics.add.sprite(752, 48, "player2", 0);
+
 
   //frames das animações
   this.anims.create({
@@ -156,7 +162,7 @@ cena1.create = function () {
   cursors = this.input.keyboard.createCursorKeys();
 
   // Contador na tela
-  timerText = this.add.text(16, 16, "60", { fontSize: "32px", fill: "#fff" });
+  timerText = this.add.text(16, 16, "150", { fontSize: "32px", fill: "#fff" });
 
   // Conectar no servidor via WebSocket
   this.socket = io();
@@ -180,7 +186,8 @@ cena1.create = function () {
       physics.add.collider(player1, worldLayer, null, null, this);
 
       // Câmera seguindo o personagem 1
-      //cameras.main.startFollow(player1);
+      cameras.main.startFollow(player1);
+      cameras.main.setZoom(5)
 
       // navigator.mediaDevices
       //   .getUserMedia({ video: false, audio: true })
@@ -235,7 +242,7 @@ cena1.create = function () {
     console.log(jogadores);
     if (jogadores.primeiro !== undefined && jogadores.segundo !== undefined) {
       // Contagem regressiva em segundos (1.000 milissegundos)
-      timer = 60;
+      timer = 150;
       timedEvent = time.addEvent({
         delay: 1000,
         callback: countdown,
@@ -364,7 +371,6 @@ cena1.update = function (time, delta) {
   // Se o contador terminar segue para a cena 2
   if (timer === 0) {
     this.scene.start(cena2);
-    timer = 60;
   }
 };
 
