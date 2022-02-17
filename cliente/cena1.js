@@ -20,8 +20,8 @@ const audio = document.querySelector("audio");
 
 cena1.preload = function () {
   // tilesets e mapa
-  this.load.image("imagens", "./assets/MasterSimple.png");
-  //this.load.image("imagens2", "./assets/grass.png");
+  this.load.image("tilesets1", "./assets/tilesets1.png");
+  this.load.image("tilesets2", "./assets/tilesets2.png");
   this.load.tilemapTiledJSON("mapa", "./assets/labirinto.json");
 
   // personagens
@@ -43,13 +43,13 @@ cena1.create = function () {
   // mapa
   const map = this.make.tilemap({ key: "mapa" });
 
-  const tileset = map.addTilesetImage("assets", "imagens");
-  //const tileset2 = map.addTilesetImage("grass", "imagens2");
+  const tileset = map.addTilesetImage("assets", "tilesets1");
+  const tileset2 = map.addTilesetImage("assets2", "tilesets2");
 
   // camadas
   const belowLayer1 = map.createLayer("belowlayer1", tileset, 0, 0);
-  const belowLayer2 = map.createLayer("belowlayer2", tileset, 0, 0);
-  const worldLayer = map.createLayer("worldlayer", tileset, 0, 0);
+  const belowLayer2 = map.createLayer("belowlayer2", tileset2, 0, 0);
+  const worldLayer = map.createLayer("worldlayer", tileset2, 0, 0);
 
   // colisão com camadas
   worldLayer.setCollisionByProperty({ collides: true });
