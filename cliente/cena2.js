@@ -10,7 +10,8 @@ cena2.preload = function () {
 
 cena2.create = function () {
 
-    var button = this.add.image(400, 400, 'voltar').setInteractive();
+    this.add.image(400, 400, "final");
+    var button = this.add.image(385, 700, 'voltar').setInteractive();
 
     button.on(
         'pointerdown',

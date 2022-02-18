@@ -4,10 +4,14 @@ var cena1 = new Phaser.Scene("Cena 1");
 
 var player1;
 var player2;
+var door;
+var door1;
+var door2;
+var door3;
 var cursors;
 var gameOver = false;
-var timedEvent;
 var timer;
+var timedEvent;
 var timerText;
 var jogador;
 var ice_servers = {
@@ -26,7 +30,7 @@ cena1.preload = function () {
 
   // personagens
   this.load.spritesheet("player1", "./assets/sprite1.png", {
-    frameWidth: 15,
+    frameWidth: 16,
     frameHeight: 16,
   });
 
@@ -34,11 +38,30 @@ cena1.preload = function () {
     frameWidth: 15,
     frameHeight: 16,
   });
+
+  this.load.spritesheet("door", "./assets/door.png", {
+    frameWidth: 32,
+    frameHeight: 51,
+  });
+
+  this.load.spritesheet("door1", "./assets/door1.png", {
+    frameWidth: 32,
+    frameHeight: 51,
+  });
+
+  this.load.spritesheet("door2", "./assets/door2.png", {
+    frameWidth: 32,
+    frameHeight: 51,
+  });
+
+  this.load.spritesheet("door3", "./assets/door3.png", {
+    frameWidth: 32,
+    frameHeight: 51,
+  });
 };
 
 cena1.create = function () {
-
-  timer = -1
+  timer = -1;
 
   // mapa
   const map = this.make.tilemap({ key: "mapa" });
@@ -57,6 +80,14 @@ cena1.create = function () {
   // spawn
   player1 = this.physics.add.sprite(400, 768, "player1", 0);
   player2 = this.physics.add.sprite(752, 48, "player2", 0);
+
+  //door = this.physics.add.sprite(688, 585, "door", 0);
+  //door1 = this.physics.add.sprite(400, 768, "door1", 0);
+  //door2 = this.physics.add.sprite(400, 768, "door2", 0);
+  //door3 = this.physics.add.sprite(400, 768, "door3", 0);
+
+  //this.physics.add.overlap(player1, door, openDoor, null, this);
+
 
 
   //frames das animações
@@ -158,12 +189,24 @@ cena1.create = function () {
     repeat: -1,
   });
 
+  this.anims.create({
+    key: "abrir-porta",
+    frames: this.anims.generateFrameNumbers("door", {
+      start: 2,
+      end: 1,
+    }),
+    frameRate: 3,
+  });
+
   // Direcionais
   cursors = this.input.keyboard.createCursorKeys();
 
   // Contador na tela
-  timerText = this.add.text(16, 16, "150", { fontSize: "32px", fill: "#fff" });
-
+   timerText = this.add.text(16, 16, "15", {
+     fontSize: "32px",
+     fill: "#fff",
+   });
+  
   // Conectar no servidor via WebSocket
   this.socket = io();
 
@@ -173,6 +216,7 @@ cena1.create = function () {
   var cameras = this.cameras;
   var time = this.time;
   var socket = this.socket;
+  var add = this.add;
 
   this.socket.on("jogadores", function (jogadores) {
     if (jogadores.primeiro === self.socket.id) {
@@ -184,10 +228,13 @@ cena1.create = function () {
 
       // Colisão com camadas 1
       physics.add.collider(player1, worldLayer, null, null, this);
-
+      
       // Câmera seguindo o personagem 1
       cameras.main.startFollow(player1);
-      cameras.main.setZoom(5)
+      
+      cameras.main.setZoom(5);
+
+      cameras.main.setBounds(50, 50, 750, 750);
 
       // navigator.mediaDevices
       //   .getUserMedia({ video: false, audio: true })
@@ -238,11 +285,13 @@ cena1.create = function () {
       //   .catch((error) => console.log(error));
     }
 
+    
+
     // Os dois jogadores estão conectados
     console.log(jogadores);
     if (jogadores.primeiro !== undefined && jogadores.segundo !== undefined) {
       // Contagem regressiva em segundos (1.000 milissegundos)
-      timer = 150;
+      timer = 15;
       timedEvent = time.addEvent({
         delay: 1000,
         callback: countdown,
@@ -296,7 +345,6 @@ cena1.create = function () {
 };
 
 cena1.update = function (time, delta) {
-
   //Sincronizar direcionais com movimentos
   if (jogador === 1 && timer >= 0) {
     if (cursors.left.isDown) {
@@ -331,7 +379,6 @@ cena1.update = function (time, delta) {
       x: player1.body.x,
       y: player1.body.y,
     });
-
   } else if (jogador === 2 && timer >= 0) {
     if (cursors.left.isDown) {
       player2.body.setVelocityX(-50);
@@ -370,9 +417,17 @@ cena1.update = function (time, delta) {
 
   // Se o contador terminar segue para a cena 2
   if (timer === 0) {
+    this.socket.disconnect();
     this.scene.start(cena2);
+    this.scene.stop();
   }
 };
+
+function openDoor(player, door) {
+  
+  door.anims.play("abrir-porta", true);
+}
+
 
 function countdown() {
   //Contador decrementa em 1 segundo
