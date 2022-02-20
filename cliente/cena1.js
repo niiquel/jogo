@@ -9,6 +9,11 @@ var door1;
 var door2;
 var door3;
 var finaldoor;
+var key;
+var key1;
+var key2;
+var key3;
+var finalkey;
 var cursors;
 var gameOver = false;
 var timer;
@@ -44,6 +49,11 @@ cena1.preload = function () {
     frameWidth: 32,
     frameHeight: 26,
   });
+
+  //this.load.spritesheet("key", "./assets/key.png", {
+    //frameWidth: 32,
+   // frameHeight: 32,
+  //});
 };
 
 cena1.create = function () {
@@ -73,6 +83,13 @@ cena1.create = function () {
   // spawn
   player1 = this.physics.add.sprite(400, 768, "player1", 0);
   player2 = this.physics.add.sprite(752, 48, "player2", 0);
+
+  //chaves
+   key = this.physics.add.sprite(688, 560, "key", 0);
+   key1 = this.physics.add.sprite(176, 624, "key", 0);
+   key2 = this.physics.add.sprite(208, 240, "key", 0);
+   key3 = this.physics.add.sprite(752, 112, "key", 0);
+   finalkey = this.physics.add.sprite(400, 16, "key", 0);
 
   //abrir portas
   this.physics.add.overlap(player1, door, openDoor, null, this);
