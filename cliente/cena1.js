@@ -8,6 +8,7 @@ var door;
 var door1;
 var door2;
 var door3;
+var finaldoor;
 var cursors;
 var gameOver = false;
 var timer;
@@ -41,22 +42,7 @@ cena1.preload = function () {
 
   this.load.spritesheet("door", "./assets/door.png", {
     frameWidth: 32,
-    frameHeight: 51,
-  });
-
-  this.load.spritesheet("door1", "./assets/door1.png", {
-    frameWidth: 32,
-    frameHeight: 51,
-  });
-
-  this.load.spritesheet("door2", "./assets/door2.png", {
-    frameWidth: 32,
-    frameHeight: 51,
-  });
-
-  this.load.spritesheet("door3", "./assets/door3.png", {
-    frameWidth: 32,
-    frameHeight: 51,
+    frameHeight: 26,
   });
 };
 
@@ -77,20 +63,27 @@ cena1.create = function () {
   // colisão com camadas
   worldLayer.setCollisionByProperty({ collides: true });
 
+  //portas
+  door = this.physics.add.sprite(688, 560, "door", 0);
+  door1 = this.physics.add.sprite(176, 624, "door", 0);
+  door2 = this.physics.add.sprite(208, 240, "door", 0);
+  door3 = this.physics.add.sprite(752, 112, "door", 0);
+  finaldoor = this.physics.add.sprite(400, 16, "door", 0);
+  
   // spawn
   player1 = this.physics.add.sprite(400, 768, "player1", 0);
   player2 = this.physics.add.sprite(752, 48, "player2", 0);
 
-  //door = this.physics.add.sprite(688, 585, "door", 0);
-  //door1 = this.physics.add.sprite(400, 768, "door1", 0);
-  //door2 = this.physics.add.sprite(400, 768, "door2", 0);
-  //door3 = this.physics.add.sprite(400, 768, "door3", 0);
+  //abrir portas
+  this.physics.add.overlap(player1, door, openDoor, null, this);
+  this.physics.add.overlap(player1, door1, openDoor, null, this);
+  this.physics.add.overlap(player1, door2, openDoor, null, this);
+  this.physics.add.overlap(player1, door3, openDoor, null, this);
+  this.physics.add.overlap(player2, finaldoor, openDoor, null, this);
 
-  //this.physics.add.overlap(player1, door, openDoor, null, this);
 
 
-
-  //frames das animações
+  //frames das animações jogador 1
   this.anims.create({
     key: "left1",
     frames: this.anims.generateFrameNumbers("player1", {
@@ -140,6 +133,7 @@ cena1.create = function () {
     repeat: -1,
   });
 
+  //frames das animações jogador 2
   this.anims.create({
     key: "left2",
     frames: this.anims.generateFrameNumbers("player2", {
@@ -189,10 +183,11 @@ cena1.create = function () {
     repeat: -1,
   });
 
+  //frames das animações portas
   this.anims.create({
     key: "abrir-porta",
     frames: this.anims.generateFrameNumbers("door", {
-      start: 2,
+      start: 0,
       end: 1,
     }),
     frameRate: 3,
@@ -202,7 +197,7 @@ cena1.create = function () {
   cursors = this.input.keyboard.createCursorKeys();
 
   // Contador na tela
-   timerText = this.add.text(16, 16, "15", {
+   timerText = this.add.text(16, 16, "150", {
      fontSize: "32px",
      fill: "#fff",
    });
@@ -291,7 +286,7 @@ cena1.create = function () {
     console.log(jogadores);
     if (jogadores.primeiro !== undefined && jogadores.segundo !== undefined) {
       // Contagem regressiva em segundos (1.000 milissegundos)
-      timer = 15;
+      timer = 150;
       timedEvent = time.addEvent({
         delay: 1000,
         callback: countdown,
