@@ -18,14 +18,15 @@ var key;
 var key1;
 var key2;
 var key3;
-var finalkey;
-var ambiente;
+var key4;
+//var ambiente;
 var cursors;
 var gameOver = false;
 var timer;
 var timedEvent;
 var timerText;
 var inventoryText;
+var inventory = 0;
 var jogador;
 var ice_servers = {
   iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
@@ -84,6 +85,26 @@ cena1.preload = function () {
     frameWidth: 16,
     frameHeight: 16,
   });
+
+  this.load.spritesheet("key1", "./assets/key.png", {
+    frameWidth: 16,
+    frameHeight: 16,
+  });
+
+  this.load.spritesheet("key2", "./assets/key.png", {
+    frameWidth: 16,
+    frameHeight: 16,
+  });
+
+  this.load.spritesheet("key3", "./assets/key.png", {
+    frameWidth: 16,
+    frameHeight: 16,
+  });
+
+  this.load.spritesheet("key4", "./assets/key.png", {
+    frameWidth: 16,
+    frameHeight: 16,
+  });
 };
 
 cena1.create = function () {
@@ -123,11 +144,11 @@ cena1.create = function () {
   door4 = this.physics.add.sprite(400, 16, "door4", 0);
 
   //chaves
-  key = this.physics.add.sprite(718, 400, "key", 0);
-  key1 = this.physics.add.sprite(46, 752, "key", 0);
-  key2 = this.physics.add.sprite(494, 208, "key", 0);
-  key3 = this.physics.add.sprite(654, 272, "key", 0);
-  finalkey = this.physics.add.sprite(686, 48, "key", 0);
+  key = this.physics.add.sprite(718, 400, "key");
+  key1 = this.physics.add.sprite(46, 752, "key1");
+  key2 = this.physics.add.sprite(494, 208, "key2");
+  key3 = this.physics.add.sprite(654, 272, "key3");
+  key4 = this.physics.add.sprite(686, 48, "key4");
 
   // spawn
   player1 = this.physics.add.sprite(400, 768, "player1", 0);
@@ -139,6 +160,13 @@ cena1.create = function () {
   this.physics.add.overlap(player1, door2, openDoor, null, this);
   this.physics.add.overlap(player1, door3, openDoor, null, this);
   this.physics.add.overlap(player2, door4, openDoor, null, this);
+
+  //coletar chaves
+  this.physics.add.overlap(player1, key, collectKey, null, this);
+  this.physics.add.overlap(player1, key1, collectKey, null, this);
+  this.physics.add.overlap(player1, key2, collectKey, null, this);
+  this.physics.add.overlap(player1, key3, collectKey, null, this);
+  this.physics.add.overlap(player2, key4, collectKey, null, this);
 
   //frames das animações jogador 1
   this.anims.create({
@@ -295,7 +323,7 @@ cena1.create = function () {
     fill: "#fff",
   });
 
-  inventoryText = this.add.text(16, 16, "1", {
+  inventoryText = this.add.text(16, 40, "0", {
     fontSize: "32px",
     fill: "#fff",
   });
@@ -329,7 +357,7 @@ cena1.create = function () {
 
       cameras.main.setZoom(5);
 
-      cameras.main.setBounds(50, 50, 750, 750);
+      cameras.main.setBounds(0, 0, 800, 800);
 
       // navigator.mediaDevices
       //   .getUserMedia({ video: false, audio: true })
@@ -508,7 +536,7 @@ cena1.update = function (time, delta) {
     });
   }
 
-  // Se o contador terminar segue para a cena 2
+  // Se o contador terminar, para a música e segue para a cena 2
   if (timer === 0) {
     //ambiente.stop();
     this.socket.disconnect();
@@ -517,6 +545,7 @@ cena1.update = function (time, delta) {
   }
 };
 
+    //abrir a porta uma vez
 function openDoor(player, door_) {
   if (door_ === door) {
     if (!door_opened) {
@@ -544,6 +573,14 @@ function openDoor(player, door_) {
       door_opened4 = true;
     }
   }
+}
+
+function collectKey(player, key) {
+  //chave some quando coletada
+  key.disableBody(true, true);
+
+  inventory += 1;
+  inventoryText.setText(inventory);
 }
 
 function countdown() {
