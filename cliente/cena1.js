@@ -8,7 +8,12 @@ var door;
 var door1;
 var door2;
 var door3;
-var finaldoor;
+var door4;
+var door_opened;
+var door_opened1;
+var door_opened2;
+var door_opened3;
+var door_opened4;
 var key;
 var key1;
 var key2;
@@ -30,9 +35,8 @@ var midias;
 const audio = document.querySelector("audio");
 
 cena1.preload = function () {
-
   // música ambiente
-  this.load.audio("ambiente", "./sounds/ambiente.mp3");
+  //this.load.audio("ambiente", "./sounds/ambiente.mp3");
 
   // tilesets e mapa
   this.load.image("tilesets1", "./assets/tilesets1.png");
@@ -55,6 +59,26 @@ cena1.preload = function () {
     frameHeight: 26,
   });
 
+  this.load.spritesheet("door1", "./assets/door.png", {
+    frameWidth: 32,
+    frameHeight: 26,
+  });
+
+  this.load.spritesheet("door2", "./assets/door.png", {
+    frameWidth: 32,
+    frameHeight: 26,
+  });
+
+  this.load.spritesheet("door3", "./assets/door.png", {
+    frameWidth: 32,
+    frameHeight: 26,
+  });
+
+  this.load.spritesheet("door4", "./assets/door.png", {
+    frameWidth: 32,
+    frameHeight: 26,
+  });
+
   this.load.spritesheet("key", "./assets/key.png", {
     frameWidth: 16,
     frameHeight: 16,
@@ -62,13 +86,20 @@ cena1.preload = function () {
 };
 
 cena1.create = function () {
-  timer = -1;
-
-  ambiente = this.sound.add("ambiente");
-
-  ambiente.play();
-  ambiente.setLoop(true);
   
+  timer = -1;
+  
+  door_opened = false;
+  door_opened1 = false;
+  door_opened2 = false;
+  door_opened3 = false;
+  door_opened4 = false;
+
+  //ambiente = this.sound.add("ambiente");
+
+  //ambiente.play();
+  //ambiente.setLoop(true);
+
   // mapa
   const map = this.make.tilemap({ key: "mapa" });
 
@@ -85,18 +116,18 @@ cena1.create = function () {
 
   //portas
   door = this.physics.add.sprite(688, 560, "door", 0);
-  door1 = this.physics.add.sprite(176, 624, "door", 0);
-  door2 = this.physics.add.sprite(208, 240, "door", 0);
-  door3 = this.physics.add.sprite(752, 112, "door", 0);
-  finaldoor = this.physics.add.sprite(400, 16, "door", 0);
-  
+  door1 = this.physics.add.sprite(176, 624, "door1", 0);
+  door2 = this.physics.add.sprite(208, 240, "door2", 0);
+  door3 = this.physics.add.sprite(752, 112, "door3", 0);
+  door4 = this.physics.add.sprite(400, 16, "door4", 0);
+
   //chaves
-   key = this.physics.add.sprite(718, 400, "key", 0);
-   key1 = this.physics.add.sprite(46, 752, "key", 0);
-   key2 = this.physics.add.sprite(494, 208, "key", 0);
-   key3 = this.physics.add.sprite(654, 272, "key", 0);
-   finalkey = this.physics.add.sprite(686, 48, "key", 0);
-  
+  key = this.physics.add.sprite(718, 400, "key", 0);
+  key1 = this.physics.add.sprite(46, 752, "key", 0);
+  key2 = this.physics.add.sprite(494, 208, "key", 0);
+  key3 = this.physics.add.sprite(654, 272, "key", 0);
+  finalkey = this.physics.add.sprite(686, 48, "key", 0);
+
   // spawn
   player1 = this.physics.add.sprite(400, 768, "player1", 0);
   player2 = this.physics.add.sprite(752, 48, "player2", 0);
@@ -106,9 +137,7 @@ cena1.create = function () {
   this.physics.add.overlap(player1, door1, openDoor, null, this);
   this.physics.add.overlap(player1, door2, openDoor, null, this);
   this.physics.add.overlap(player1, door3, openDoor, null, this);
-  this.physics.add.overlap(player2, finaldoor, openDoor, null, this);
-
-
+  this.physics.add.overlap(player2, door4, openDoor, null, this);
 
   //frames das animações jogador 1
   this.anims.create({
@@ -220,15 +249,51 @@ cena1.create = function () {
     frameRate: 3,
   });
 
+  this.anims.create({
+    key: "abrir-porta1",
+    frames: this.anims.generateFrameNumbers("door1", {
+      start: 0,
+      end: 1,
+    }),
+    frameRate: 3,
+  });
+
+  this.anims.create({
+    key: "abrir-porta2",
+    frames: this.anims.generateFrameNumbers("door2", {
+      start: 0,
+      end: 1,
+    }),
+    frameRate: 3,
+  });
+
+  this.anims.create({
+    key: "abrir-porta3",
+    frames: this.anims.generateFrameNumbers("door3", {
+      start: 0,
+      end: 1,
+    }),
+    frameRate: 3,
+  });
+
+  this.anims.create({
+    key: "abrir-porta4",
+    frames: this.anims.generateFrameNumbers("door4", {
+      start: 0,
+      end: 1,
+    }),
+    frameRate: 3,
+  });
+
   // Direcionais
   cursors = this.input.keyboard.createCursorKeys();
 
   // Contador na tela
-   timerText = this.add.text(16, 16, "150", {
-     fontSize: "32px",
-     fill: "#fff",
-   });
-  
+  timerText = this.add.text(16, 16, "150", {
+    fontSize: "32px",
+    fill: "#fff",
+  });
+
   // Conectar no servidor via WebSocket
   this.socket = io();
 
@@ -250,10 +315,10 @@ cena1.create = function () {
 
       // Colisão com camadas 1
       physics.add.collider(player1, worldLayer, null, null, this);
-      
+
       // Câmera seguindo o personagem 1
       cameras.main.startFollow(player1);
-      
+
       cameras.main.setZoom(5);
 
       cameras.main.setBounds(50, 50, 750, 750);
@@ -306,8 +371,6 @@ cena1.create = function () {
       //   })
       //   .catch((error) => console.log(error));
     }
-
-    
 
     // Os dois jogadores estão conectados
     console.log(jogadores);
@@ -439,19 +502,41 @@ cena1.update = function (time, delta) {
 
   // Se o contador terminar segue para a cena 2
   if (timer === 0) {
-
-    ambiente.stop();
+    //ambiente.stop();
     this.socket.disconnect();
     this.scene.start(cena2);
     this.scene.stop();
   }
 };
 
-function openDoor(player, door) {
-  
-  door.anims.play("abrir-porta", true);
+function openDoor(player, door_) {
+  if (door_ === door) {
+    if (!door_opened) {
+      door.anims.play("abrir-porta", true);
+      door_opened = true;
+    }
+  } else if (door_ === door1) {
+    if (!door_opened1) {
+      door1.anims.play("abrir-porta1", true);
+      door_opened1 = true;
+    }
+  } else if (door_ === door2) {
+    if (!door_opened2) {
+      door2.anims.play("abrir-porta2", true);
+      door_opened2 = true;
+    }
+  } else if (door_ === door3) {
+    if (!door_opened3) {
+      door3.anims.play("abrir-porta3", true);
+      door_opened3 = true;
+    }
+  } else if (door_ === door4) {
+    if (!door_opened4) {
+      door4.anims.play("abrir-porta4", true);
+      door_opened4 = true;
+    }
+  }
 }
-
 
 function countdown() {
   //Contador decrementa em 1 segundo
