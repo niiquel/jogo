@@ -50,10 +50,10 @@ cena1.preload = function () {
     frameHeight: 26,
   });
 
-  //this.load.spritesheet("key", "./assets/key.png", {
-    //frameWidth: 32,
-   // frameHeight: 32,
-  //});
+  this.load.spritesheet("key", "./assets/key.png", {
+    frameWidth: 32,
+    frameHeight: 32,
+  });
 };
 
 cena1.create = function () {
@@ -80,16 +80,16 @@ cena1.create = function () {
   door3 = this.physics.add.sprite(752, 112, "door", 0);
   finaldoor = this.physics.add.sprite(400, 16, "door", 0);
   
+  //chaves
+   key = this.physics.add.sprite(730, 400, "key", 0);
+   key1 = this.physics.add.sprite(58, 752, "key", 0);
+   key2 = this.physics.add.sprite(506, 208, "key", 0);
+   key3 = this.physics.add.sprite(667, 272, "key", 0);
+   finalkey = this.physics.add.sprite(698, 48, "key", 0);
+  
   // spawn
   player1 = this.physics.add.sprite(400, 768, "player1", 0);
   player2 = this.physics.add.sprite(752, 48, "player2", 0);
-
-  //chaves
-   key = this.physics.add.sprite(688, 560, "key", 0);
-   key1 = this.physics.add.sprite(176, 624, "key", 0);
-   key2 = this.physics.add.sprite(208, 240, "key", 0);
-   key3 = this.physics.add.sprite(752, 112, "key", 0);
-   finalkey = this.physics.add.sprite(400, 16, "key", 0);
 
   //abrir portas
   this.physics.add.overlap(player1, door, openDoor, null, this);
@@ -346,12 +346,12 @@ cena1.create = function () {
   socket.on("desenharOutroJogador", ({ frame, x, y }) => {
     if (jogador === 1) {
       player2.setFrame(frame);
-      player2.x = x;
-      player2.y = y;
+      player2.x = x + 8;
+      player2.y = y + 7.5;
     } else if (jogador === 2) {
       player1.setFrame(frame);
-      player1.x = x;
-      player1.y = y;
+      player1.x = x + 8;
+      player1.y = y + 8;
     }
   });
 };
