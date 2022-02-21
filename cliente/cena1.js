@@ -14,6 +14,7 @@ var key1;
 var key2;
 var key3;
 var finalkey;
+var ambiente;
 var cursors;
 var gameOver = false;
 var timer;
@@ -29,6 +30,9 @@ var midias;
 const audio = document.querySelector("audio");
 
 cena1.preload = function () {
+
+  this.load.audio("ambiente", "./sounds/ambiente.mp3");
+
   // tilesets e mapa
   this.load.image("tilesets1", "./assets/tilesets1.png");
   this.load.image("tilesets2", "./assets/tilesets2.png");
@@ -59,6 +63,11 @@ cena1.preload = function () {
 cena1.create = function () {
   timer = -1;
 
+  ambiente = this.sound.add("ambiente");
+
+  ambient.play();
+  ambient.setLoop(true);
+  
   // mapa
   const map = this.make.tilemap({ key: "mapa" });
 
@@ -429,6 +438,8 @@ cena1.update = function (time, delta) {
 
   // Se o contador terminar segue para a cena 2
   if (timer === 0) {
+
+    ambiente.stop();
     this.socket.disconnect();
     this.scene.start(cena2);
     this.scene.stop();
