@@ -25,6 +25,7 @@ var gameOver = false;
 var timer;
 var timedEvent;
 var timerText;
+var inventoryText;
 var jogador;
 var ice_servers = {
   iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
@@ -293,6 +294,13 @@ cena1.create = function () {
     fontSize: "32px",
     fill: "#fff",
   });
+
+  inventoryText = this.add.text(16, 16, "1", {
+    fontSize: "32px",
+    fill: "#fff",
+  });
+
+  inventoryText.setScrollFactor(0);
 
   // Conectar no servidor via WebSocket
   this.socket = io();
