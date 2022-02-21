@@ -31,6 +31,7 @@ const audio = document.querySelector("audio");
 
 cena1.preload = function () {
 
+  // música ambiente
   this.load.audio("ambiente", "./sounds/ambiente.mp3");
 
   // tilesets e mapa
@@ -65,8 +66,8 @@ cena1.create = function () {
 
   ambiente = this.sound.add("ambiente");
 
-  ambient.play();
-  ambient.setLoop(true);
+  ambiente.play();
+  ambiente.setLoop(true);
   
   // mapa
   const map = this.make.tilemap({ key: "mapa" });
