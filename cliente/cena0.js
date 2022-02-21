@@ -6,6 +6,7 @@ cena0.preload = function () {
 
     this.load.image('abertura', 'assets/cena0.png');
     this.load.image('play', 'assets/play.png')
+    this.load.audio("abertura", "assets/cena1.mp3");
 };
 
 cena0.create = function () {
