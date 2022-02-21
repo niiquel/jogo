@@ -12,7 +12,7 @@ cena0.preload = function () {
 cena0.create = function () {
 
     this.add.image(400, 400, 'abertura');
-    var button = this.add.image(400, 750, 'play').setInteractive();
+    var button = this.add.image(400, 730, 'play').setInteractive();
 
     button.on(
         'pointerdown',

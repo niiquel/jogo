@@ -51,8 +51,8 @@ cena1.preload = function () {
   });
 
   this.load.spritesheet("key", "./assets/key.png", {
-    frameWidth: 32,
-    frameHeight: 32,
+    frameWidth: 16,
+    frameHeight: 16,
   });
 };
 
@@ -81,11 +81,11 @@ cena1.create = function () {
   finaldoor = this.physics.add.sprite(400, 16, "door", 0);
   
   //chaves
-   key = this.physics.add.sprite(730, 400, "key", 0);
-   key1 = this.physics.add.sprite(58, 752, "key", 0);
-   key2 = this.physics.add.sprite(506, 208, "key", 0);
-   key3 = this.physics.add.sprite(667, 272, "key", 0);
-   finalkey = this.physics.add.sprite(698, 48, "key", 0);
+   key = this.physics.add.sprite(718, 400, "key", 0);
+   key1 = this.physics.add.sprite(46, 752, "key", 0);
+   key2 = this.physics.add.sprite(494, 208, "key", 0);
+   key3 = this.physics.add.sprite(654, 272, "key", 0);
+   finalkey = this.physics.add.sprite(686, 48, "key", 0);
   
   // spawn
   player1 = this.physics.add.sprite(400, 768, "player1", 0);
