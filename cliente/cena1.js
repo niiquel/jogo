@@ -108,9 +108,8 @@ cena1.preload = function () {
 };
 
 cena1.create = function () {
-  
   timer = -1;
-  
+
   door_opened = false;
   door_opened1 = false;
   door_opened2 = false;
@@ -138,10 +137,15 @@ cena1.create = function () {
 
   //portas
   door = this.physics.add.sprite(688, 560, "door", 0);
+  door.body.setImmovable(true);
   door1 = this.physics.add.sprite(176, 624, "door1", 0);
+  door1.body.setImmovable(true);
   door2 = this.physics.add.sprite(208, 240, "door2", 0);
+  door2.body.setImmovable(true);
   door3 = this.physics.add.sprite(752, 112, "door3", 0);
+  door3.body.setImmovable(true);
   door4 = this.physics.add.sprite(400, 16, "door4", 0);
+  door4.body.setImmovable(true);
 
   //chaves
   key = this.physics.add.sprite(718, 400, "key");
@@ -155,11 +159,91 @@ cena1.create = function () {
   player2 = this.physics.add.sprite(752, 48, "player2", 0);
 
   //abrir portas
-  this.physics.add.overlap(player1, door, openDoor, null, this);
-  this.physics.add.overlap(player1, door1, openDoor, null, this);
-  this.physics.add.overlap(player1, door2, openDoor, null, this);
-  this.physics.add.overlap(player1, door3, openDoor, null, this);
-  this.physics.add.overlap(player2, door4, openDoor, null, this);
+  var door_collider = this.physics.add.collider(
+    player1,
+    door,
+    null,
+    function () {
+      if (inventory > 0) {
+        if (!door_opened) {
+          door.anims.play("abrir-porta", true);
+          door_opened = true;
+          inventory -= 1;
+          inventoryText.setText(inventory);
+          this.physics.world.removeCollider(door_collider);
+        }
+      }
+    },
+    this
+  );
+  var door1_collider = this.physics.add.collider(
+    player1,
+    door1,
+    null,
+    function () {
+      if (inventory > 0) {
+        if (!door_opened1) {
+          door1.anims.play("abrir-porta1", true);
+          door_opened1 = true;
+          inventory -= 1;
+          inventoryText.setText(inventory);
+          this.physics.world.removeCollider(door1_collider);
+        }
+      }
+    },
+    this
+  );
+  var door2_collider = this.physics.add.collider(
+    player1,
+    door2,
+    null,
+    function () {
+      if (inventory > 0) {
+        if (!door_opened2) {
+          door2.anims.play("abrir-porta2", true);
+          door_opened2 = true;
+          inventory -= 1;
+          inventoryText.setText(inventory);
+          this.physics.world.removeCollider(door2_collider);
+        }
+      }
+    },
+    this
+  );
+  var door3_collider = this.physics.add.collider(
+    player1,
+    door3,
+    null,
+    function () {
+      if (inventory > 0) {
+        if (!door_opened3) {
+          door.anims.play("abrir-porta3", true);
+          door_opened = true;
+          inventory -= 1;
+          inventoryText.setText(inventory);
+          this.physics.world.removeCollider(door_collider);
+        }
+      }
+    },
+    this
+  );
+  var door4_collider = this.physics.add.collider(
+    player2,
+    door4,
+    null,
+    function () {
+      if (inventory > 0) {
+        if (!door_opened4) {
+          door4.anims.play("abrir-porta4", true);
+          door_opened4 = true;
+          inventory -= 1;
+          inventoryText.setText(inventory);
+          this.physics.world.removeCollider(door4_collider);
+        }
+      }
+    },
+    this
+  );
 
   //coletar chaves
   this.physics.add.overlap(player1, key, collectKey, null, this);
@@ -412,7 +496,7 @@ cena1.create = function () {
     console.log(jogadores);
     if (jogadores.primeiro !== undefined && jogadores.segundo !== undefined) {
       // Contagem regressiva em segundos (1.000 milissegundos)
-      timer = 150;
+      timer = 300;
       timedEvent = time.addEvent({
         delay: 1000,
         callback: countdown,
@@ -544,36 +628,6 @@ cena1.update = function (time, delta) {
     this.scene.stop();
   }
 };
-
-    //abrir a porta uma vez
-function openDoor(player, door_) {
-  if (door_ === door) {
-    if (!door_opened) {
-      door.anims.play("abrir-porta", true);
-      door_opened = true;
-    }
-  } else if (door_ === door1) {
-    if (!door_opened1) {
-      door1.anims.play("abrir-porta1", true);
-      door_opened1 = true;
-    }
-  } else if (door_ === door2) {
-    if (!door_opened2) {
-      door2.anims.play("abrir-porta2", true);
-      door_opened2 = true;
-    }
-  } else if (door_ === door3) {
-    if (!door_opened3) {
-      door3.anims.play("abrir-porta3", true);
-      door_opened3 = true;
-    }
-  } else if (door_ === door4) {
-    if (!door_opened4) {
-      door4.anims.play("abrir-porta4", true);
-      door_opened4 = true;
-    }
-  }
-}
 
 function collectKey(player, key) {
   //chave some quando coletada
