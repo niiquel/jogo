@@ -1,4 +1,4 @@
-import { cena0 } from "./cena1.js";
+import { cena0 } from "./cena0.js";
 
 var cena3 = new Phaser.Scene("Cena 3");
 

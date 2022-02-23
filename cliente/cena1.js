@@ -19,6 +19,9 @@ var key1;
 var key2;
 var key3;
 var key4;
+var win1 = false;
+var win2 = false;
+var winButton;
 //var ambiente;
 var cursors;
 var gameOver = false;
@@ -27,6 +30,8 @@ var timedEvent;
 var timerText;
 var inventoryText;
 var inventory = 0;
+var inventoryText2;
+var inventory2 = 0;
 var jogador;
 var ice_servers = {
   iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
@@ -44,6 +49,8 @@ cena1.preload = function () {
   this.load.image("tilesets1", "./assets/tilesets1.png");
   this.load.image("tilesets2", "./assets/tilesets2.png");
   this.load.tilemapTiledJSON("mapa", "./assets/labirinto.json");
+
+  this.load.image("winButton", "./assets/win.png");
 
   // personagens
   this.load.spritesheet("player1", "./assets/sprite1.png", {
@@ -158,6 +165,8 @@ cena1.create = function () {
   player1 = this.physics.add.sprite(400, 768, "player1", 0);
   player2 = this.physics.add.sprite(752, 48, "player2", 0);
 
+  winButton = this.add.image(384, 8, "winButton", 0); 
+
   //abrir portas
   var door_collider = this.physics.add.collider(
     player1,
@@ -217,32 +226,47 @@ cena1.create = function () {
     function () {
       if (inventory > 0) {
         if (!door_opened3) {
-          door.anims.play("abrir-porta3", true);
-          door_opened = true;
+          door3.anims.play("abrir-porta3", true);
+          door_opened3 = true;
           inventory -= 1;
           inventoryText.setText(inventory);
-          this.physics.world.removeCollider(door_collider);
+          this.physics.world.removeCollider(door3_collider);
+          this.physics.world.removeCollider(door3_collider2);
         }
       }
     },
     this
   );
+
+  var door3_collider2 = this.physics.add.collider(
+    player2,
+    door3,
+    null
+  );
+
   var door4_collider = this.physics.add.collider(
     player2,
     door4,
     null,
     function () {
-      if (inventory > 0) {
+      if (inventory2 > 0) {
         if (!door_opened4) {
           door4.anims.play("abrir-porta4", true);
           door_opened4 = true;
-          inventory -= 1;
-          inventoryText.setText(inventory);
+          inventory2 -= 1;
+          inventoryText2.setText(inventory2);
           this.physics.world.removeCollider(door4_collider);
+          this.physics.world.removeCollider(door4_collider2);
         }
       }
     },
     this
+  );
+
+  var door4_collider2 = this.physics.add.collider(
+    player1,
+    door4,
+    null
   );
 
   //coletar chaves
@@ -250,7 +274,10 @@ cena1.create = function () {
   this.physics.add.overlap(player1, key1, collectKey, null, this);
   this.physics.add.overlap(player1, key2, collectKey, null, this);
   this.physics.add.overlap(player1, key3, collectKey, null, this);
-  this.physics.add.overlap(player2, key4, collectKey, null, this);
+  this.physics.add.overlap(player2, key4, collectKey2, null, this);
+
+  this.physics.add.overlap(player1, winButton, winGame1, null, this);
+  this.physics.add.overlap(player2, winButton, winGame2, null, this);
 
   //frames das animações jogador 1
   this.anims.create({
@@ -407,14 +434,7 @@ cena1.create = function () {
     fill: "#fff",
   });
 
-  inventoryText = this.add.text(16, 40, "0", {
-    fontSize: "32px",
-    fill: "#fff",
-  });
-
-  inventoryText.setScrollFactor(0);
-
-  // Conectar no servidor via WebSocket
+    // Conectar no servidor via WebSocket
   this.socket = io();
 
   // Disparar evento quando jogador entrar na partida
@@ -436,6 +456,13 @@ cena1.create = function () {
       // Colisão com camadas 1
       physics.add.collider(player1, worldLayer, null, null, this);
 
+      inventoryText = add.text(464, 656, "0", {
+        fontSize: "32px",
+        fill: "#fff",
+      });
+
+      inventoryText.setScrollFactor(0);
+      
       // Câmera seguindo o personagem 1
       cameras.main.startFollow(player1);
 
@@ -443,12 +470,8 @@ cena1.create = function () {
 
       cameras.main.setBounds(0, 0, 800, 800);
 
-      // navigator.mediaDevices
-      //   .getUserMedia({ video: false, audio: true })
-      //   .then((stream) => {
-      //     midias = stream;
-      //   })
-      //   .catch((error) => console.log(error));
+      
+
     } else if (jogadores.segundo === self.socket.id) {
       // Define jogador como o segundo
       jogador = 2;
@@ -457,40 +480,13 @@ cena1.create = function () {
       player2.setCollideWorldBounds(true);
 
       // Colisão com camadas 2
-      physics.add.collider(player2, worldLayer, null, null, this);
-
-      // Câmera seguindo o personagem 2
-      //cameras.main.startFollow(player2);
-
-      // navigator.mediaDevices
-      //   .getUserMedia({ video: false, audio: true })
-      //   .then((stream) => {
-      //     midias = stream;
-      //     localConnection = new RTCPeerConnection(ice_servers);
-      //     midias
-      //       .getTracks()
-      //       .forEach((track) => localConnection.addTrack(track, midias));
-      //     localConnection.onicecandidate = ({ candidate }) => {
-      //       candidate &&
-      //         socket.emit("candidate", jogadores.primeiro, candidate);
-      //     };
-      //     console.log(midias);
-      //     localConnection.ontrack = ({ streams: [midias] }) => {
-      //       audio.srcObject = midias;
-      //     };
-      //     localConnection
-      //       .createOffer()
-      //       .then((offer) => localConnection.setLocalDescription(offer))
-      //       .then(() => {
-      //         socket.emit(
-      //           "offer",
-      //           jogadores.primeiro,
-      //           localConnection.localDescription
-      //         );
-      //       });
-      //   })
-      //   .catch((error) => console.log(error));
+      physics.add.collider(player2, worldLayer, null, null, this);      
     }
+
+    inventoryText2 = add.text(780, 16, "0", {
+      fontSize: "32px",
+      fill: "#fff",
+    });
 
     // Os dois jogadores estão conectados
     console.log(jogadores);
@@ -553,17 +549,17 @@ cena1.update = function (time, delta) {
   //Sincronizar direcionais com movimentos
   if (jogador === 1 && timer >= 0) {
     if (cursors.left.isDown) {
-      player1.body.setVelocityX(-50);
+      player1.body.setVelocityX(-150);
     } else if (cursors.right.isDown) {
-      player1.body.setVelocityX(50);
+      player1.body.setVelocityX(150);
     } else {
       player1.body.setVelocityX(0);
     }
 
     if (cursors.up.isDown) {
-      player1.body.setVelocityY(-50);
+      player1.body.setVelocityY(-150);
     } else if (cursors.down.isDown) {
-      player1.body.setVelocityY(50);
+      player1.body.setVelocityY(150);
     } else {
       player1.body.setVelocityY(0);
     }
@@ -622,19 +618,37 @@ cena1.update = function (time, delta) {
 
   // Se o contador terminar, para a música e segue para a cena 2
   if (timer === 0) {
-    //ambiente.stop();
-    this.socket.disconnect();
-    this.scene.start(cena2);
-    this.scene.stop();
+    if (win1 === true && win2 === true) {
+      //ambiente.stop();
+      this.socket.disconnect();
+      this.scene.start(cena2);
+      this.scene.stop();
+    }
   }
 };
 
-function collectKey(player, key) {
+function collectKey(player1, key) {
   //chave some quando coletada
   key.disableBody(true, true);
 
   inventory += 1;
   inventoryText.setText(inventory);
+}
+
+function collectKey2(player2, key) {
+  //chave some quando coletada
+  key.disableBody(true, true);
+
+  inventory2 += 1;
+  inventoryText2.setText(inventory2);
+}
+
+function winGame1(player1, winButton) {
+  win1 === true;
+}
+
+function winGame2(player2, winButton) {
+  win2 === true;
 }
 
 function countdown() {
