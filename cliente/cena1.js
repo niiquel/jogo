@@ -4,6 +4,7 @@ var cena1 = new Phaser.Scene("Cena 1");
 
 var player1;
 var player2;
+var bandeira;
 var door;
 var door1;
 var door2;
@@ -88,6 +89,11 @@ cena1.preload = function () {
     frameHeight: 26,
   });
 
+  this.load.spritesheet("bandeira", "./assets/bandeira.png", {
+    frameWidth: 32,
+    frameHeight: 26,
+  });
+
   this.load.spritesheet("key", "./assets/key.png", {
     frameWidth: 16,
     frameHeight: 16,
@@ -160,6 +166,9 @@ cena1.create = function () {
   key2 = this.physics.add.sprite(494, 208, "key2");
   key3 = this.physics.add.sprite(654, 272, "key3");
   key4 = this.physics.add.sprite(686, 48, "key4");
+
+  //bandeiras
+  bandeira = this.physics.add.sprite(380, 35, "bandeira");
 
   // spawn
   player1 = this.physics.add.sprite(400, 768, "player1", 0);
