@@ -4,7 +4,6 @@ var cena1 = new Phaser.Scene("Cena 1");
 
 var player1;
 var player2;
-var bandeira;
 var door;
 var door1;
 var door2;
@@ -22,10 +21,9 @@ var key3;
 var key4;
 var win1 = false;
 var win2 = false;
-var winButton;
+var saída;
 //var ambiente;
 var cursors;
-var gameOver = false;
 var timer;
 var timedEvent;
 var timerText;
@@ -50,8 +48,6 @@ cena1.preload = function () {
   this.load.image("tilesets1", "./assets/tilesets1.png");
   this.load.image("tilesets2", "./assets/tilesets2.png");
   this.load.tilemapTiledJSON("mapa", "./assets/labirinto.json");
-
-  this.load.image("winButton", "./assets/win.png");
 
   // personagens
   this.load.spritesheet("player1", "./assets/sprite1.png", {
@@ -89,9 +85,9 @@ cena1.preload = function () {
     frameHeight: 26,
   });
 
-  this.load.spritesheet("bandeira", "./assets/bandeira.png", {
-    frameWidth: 32,
-    frameHeight: 26,
+  this.load.spritesheet("saída", "./assets/saída.png", {
+    frameWidth: 19,
+    frameHeight: 18,
   });
 
   this.load.spritesheet("key", "./assets/key.png", {
@@ -168,13 +164,11 @@ cena1.create = function () {
   key4 = this.physics.add.sprite(686, 48, "key4");
 
   //bandeiras
-  bandeira = this.physics.add.sprite(380, 15, "bandeira");
+  saída = this.physics.add.sprite(400, 10, "saída");
 
   // spawn
   player1 = this.physics.add.sprite(400, 768, "player1", 0);
   player2 = this.physics.add.sprite(752, 48, "player2", 0);
-
-  winButton = this.add.image(384, 8, "winButton", 0); 
 
   //abrir portas
   var door_collider = this.physics.add.collider(
@@ -285,8 +279,8 @@ cena1.create = function () {
   this.physics.add.overlap(player1, key3, collectKey, null, this);
   this.physics.add.overlap(player2, key4, collectKey2, null, this);
 
-  this.physics.add.overlap(player1, winButton, winGame1, null, this);
-  this.physics.add.overlap(player2, winButton, winGame2, null, this);
+  this.physics.add.overlap(player1, saída, winGame1, null, this);
+  this.physics.add.overlap(player2, saída, winGame2, null, this);
 
   //frames das animações jogador 1
   this.anims.create({
@@ -454,6 +448,18 @@ cena1.create = function () {
   var socket = this.socket;
   var add = this.add;
 
+  inventoryText = add.text(768, 758, "0", {
+    fontSize: "32px",
+    fill: "#fff",
+  });
+
+  inventoryText.setScrollFactor(0);
+
+  inventoryText2 = add.text(768, 16, "0", {
+    fontSize: "32px",
+    fill: "#fff",
+  });
+
   this.socket.on("jogadores", function (jogadores) {
     if (jogadores.primeiro === self.socket.id) {
       // Define jogador como o primeiro
@@ -464,23 +470,14 @@ cena1.create = function () {
 
       // Colisão com camadas 1
       physics.add.collider(player1, worldLayer, null, null, this);
-
-      inventoryText = add.text(464, 656, "0", {
-        fontSize: "32px",
-        fill: "#fff",
-      });
-
-      inventoryText.setScrollFactor(0);
-      
+     
       // Câmera seguindo o personagem 1
       cameras.main.startFollow(player1);
 
       cameras.main.setZoom(5);
 
       cameras.main.setBounds(0, 0, 800, 800);
-
       
-
     } else if (jogadores.segundo === self.socket.id) {
       // Define jogador como o segundo
       jogador = 2;
@@ -491,12 +488,7 @@ cena1.create = function () {
       // Colisão com camadas 2
       physics.add.collider(player2, worldLayer, null, null, this);      
     }
-
-    inventoryText2 = add.text(780, 16, "0", {
-      fontSize: "32px",
-      fill: "#fff",
-    });
-
+    
     // Os dois jogadores estão conectados
     console.log(jogadores);
     if (jogadores.primeiro !== undefined && jogadores.segundo !== undefined) {
@@ -591,17 +583,17 @@ cena1.update = function (time, delta) {
     });
   } else if (jogador === 2 && timer >= 0) {
     if (cursors.left.isDown) {
-      player2.body.setVelocityX(-50);
+      player2.body.setVelocityX(-150);
     } else if (cursors.right.isDown) {
-      player2.body.setVelocityX(50);
+      player2.body.setVelocityX(150);
     } else {
       player2.body.setVelocityX(0);
     }
 
     if (cursors.up.isDown) {
-      player2.body.setVelocityY(-50);
+      player2.body.setVelocityY(-150);
     } else if (cursors.down.isDown) {
-      player2.body.setVelocityY(50);
+      player2.body.setVelocityY(150);
     } else {
       player2.body.setVelocityY(0);
     }
@@ -652,11 +644,11 @@ function collectKey2(player2, key) {
   inventoryText2.setText(inventory2);
 }
 
-function winGame1(player1, winButton) {
+function winGame1(player1, win1) {
   win1 === true;
 }
 
-function winGame2(player2, winButton) {
+function winGame2(player2, win2) {
   win2 === true;
 }
 
