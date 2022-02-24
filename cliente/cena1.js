@@ -168,7 +168,7 @@ cena1.create = function () {
   key4 = this.physics.add.sprite(686, 48, "key4");
 
   //bandeiras
-  bandeira = this.physics.add.sprite(380, 35, "bandeira");
+  bandeira = this.physics.add.sprite(380, 15, "bandeira");
 
   // spawn
   player1 = this.physics.add.sprite(400, 768, "player1", 0);
