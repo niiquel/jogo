@@ -19,8 +19,8 @@ var key1;
 var key2;
 var key3;
 var key4;
-var win1 = false;
-var win2 = false;
+//var win1 = false;
+//var win2 = false;
 var saída;
 //var ambiente;
 var cursors;
@@ -455,10 +455,11 @@ cena1.create = function () {
 
   inventoryText.setScrollFactor(0);
 
-  inventoryText2 = add.text(768, 16, "0", {
+  /*inventoryText2 = add.text(768, 16, "0", {
     fontSize: "32px",
     fill: "#fff",
   });
+  */
 
   this.socket.on("jogadores", function (jogadores) {
     if (jogadores.primeiro === self.socket.id) {
@@ -619,13 +620,13 @@ cena1.update = function (time, delta) {
 
   // Se o contador terminar, para a música e segue para a cena 2
   if (timer === 0) {
-    if (win1 === true && win2 === true) {
+    //if (win1 === true && win2 === true) {
       //ambiente.stop();
       this.socket.disconnect();
       this.scene.start(cena2);
       this.scene.stop();
     }
-  }
+//  }
 };
 
 function collectKey(player1, key) {
@@ -644,13 +645,13 @@ function collectKey2(player2, key) {
   inventoryText2.setText(inventory2);
 }
 
-function winGame1(player1, win1) {
-  win1 === true;
-}
+//function winGame1(player1, win1) {
+//  win1 === true;
+//}
 
-function winGame2(player2, win2) {
-  win2 === true;
-}
+//function winGame2(player2, win2) {
+//  win2 === true;
+//}
 
 function countdown() {
   //Contador decrementa em 1 segundo
